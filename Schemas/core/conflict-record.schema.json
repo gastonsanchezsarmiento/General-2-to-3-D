@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/core/conflict-record.schema.json",
+  "title": "ConflictRecord",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "conflict_id",
+    "run_id",
+    "conflict_type",
+    "severity",
+    "related_ids",
+    "summary",
+    "resolution_status"
+  ],
+  "properties": {
+    "schema_id": { "const": "core/conflict-record" },
+    "schema_version": { "const": "v1" },
+    "conflict_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "conflict_type": { "type": "string", "minLength": 1 },
+    "severity": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low"]
+    },
+    "related_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+      "minItems": 1
+    },
+    "related_artifacts": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "summary": { "type": "string", "minLength": 1 },
+    "impact_scope": { "type": "string" },
+    "resolution_status": {
+      "type": "string",
+      "enum": ["open", "under_review", "resolved", "deferred"]
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

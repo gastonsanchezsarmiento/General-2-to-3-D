@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage7/rerun-recommendation.schema.json",
+  "title": "RerunRecommendation",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "rerun_recommendation_id",
+    "run_id",
+    "verification_slice_id",
+    "recommended_stage",
+    "rerun_scope",
+    "reason",
+    "priority"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage7/rerun-recommendation" },
+    "schema_version": { "const": "v1" },
+    "rerun_recommendation_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "verification_slice_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "recommended_stage": {
+      "type": "string",
+      "enum": ["stage6", "stage3", "stage4", "stage2", "stage7", "human-review"]
+    },
+    "rerun_scope": { "type": "string", "minLength": 1 },
+    "reason": { "type": "string", "minLength": 1 },
+    "priority": {
+      "type": "string",
+      "enum": ["high", "medium", "low"]
+    },
+    "depends_on_invalidation_recommendation_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "supporting_issue_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "supporting_finding_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

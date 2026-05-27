@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage8/scene-node.schema.json",
+  "title": "SceneNode",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "scene_node_id",
+    "run_id",
+    "node_kind",
+    "geometry_representation_mode",
+    "geometry_maturity",
+    "verification_state"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage8/scene-node" },
+    "schema_version": { "const": "v1" },
+    "scene_node_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "node_kind": {
+      "type": "string",
+      "enum": ["object", "anchor", "zone", "surface", "opening", "issue-marker", "missing-coverage-marker"]
+    },
+    "source_neutral_object_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "source_anchor_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "source_stage6_slice_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "semantic_role": { "type": "string" },
+    "display_label": { "type": "string" },
+    "anchor_ref": { "$ref": "../common/base-types.schema.json#/$defs/SpatialAnchor" },
+    "transform": {
+      "type": "object",
+      "properties": {
+        "matrix4x4": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 16,
+          "maxItems": 16
+        },
+        "position": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "rotation_euler_deg": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "scale": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 3,
+          "maxItems": 3
+        }
+      },
+      "additionalProperties": false
+    },
+    "geometry_representation_mode": {
+      "type": "string",
+      "enum": [
+        "none-symbolic",
+        "point-marker",
+        "line-proxy",
+        "polyline-proxy",
+        "planar-proxy",
+        "volume-proxy",
+        "placeholder-asset-ref",
+        "external-mesh-ref",
+        "ghost-unresolved"
+      ]
+    },
+    "geometry_payload_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "geometry_maturity": { "$ref": "../common/base-types.schema.json#/$defs/GeometryMaturity" },
+    "epistemic_status": { "$ref": "../common/base-types.schema.json#/$defs/EpistemicStatus" },
+    "verification_state": {
+      "type": "string",
+      "enum": ["verified", "verified-with-warnings", "partial-failure", "blocked", "human-review-recommended", "unverified"]
+    },
+    "issue_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/evidence-ref.schema.json" }
+    },
+    "layer_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "filter_tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "review_status": {
+      "type": "string",
+      "enum": ["unreviewed", "machine_verified", "machine_warning", "human_review_recommended", "human_approved", "human_corrected"]
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

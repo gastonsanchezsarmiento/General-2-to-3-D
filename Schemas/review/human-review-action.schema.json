@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/review/human-review-action.schema.json",
+  "title": "HumanReviewAction",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "action_id",
+    "run_id",
+    "review_stage",
+    "action_type",
+    "target_ids",
+    "created_at"
+  ],
+  "properties": {
+    "schema_id": { "const": "review/human-review-action" },
+    "schema_version": { "const": "v1" },
+    "action_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "review_stage": {
+      "type": "string",
+      "enum": ["stage5_milestone", "stage10_review"]
+    },
+    "action_type": {
+      "type": "string",
+      "enum": [
+        "approve",
+        "reject",
+        "mark_uncertain",
+        "request_reread",
+        "change_type",
+        "correct_relation",
+        "correct_geometry",
+        "confirm_inferred_value",
+        "note",
+        "defer"
+      ]
+    },
+    "decision_scope": {
+      "type": "string",
+      "enum": ["checkpoint", "slice", "object", "relationship", "region"]
+    },
+    "target_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+      "minItems": 1
+    },
+    "created_at": { "$ref": "../common/base-types.schema.json#/$defs/Timestamp" },
+    "note": { "type": "string" },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

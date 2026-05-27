@@ -1,0 +1,302 @@
+{
+  "registry_version": "v1",
+  "description": "First-wave canonical schema registry for shared artifact space contracts.",
+  "schemas": [
+    {
+      "schema_id": "common/base-types",
+      "schema_version": "v1",
+      "path": "Schemas/common/base-types.schema.json",
+      "stability": "stable",
+      "producer_stages": ["all"],
+      "consumer_stages": ["all"]
+    },
+    {
+      "schema_id": "common/evidence-ref",
+      "schema_version": "v1",
+      "path": "Schemas/common/evidence-ref.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage3", "stage4", "stage5a", "stage6", "stage7", "stage8"],
+      "consumer_stages": ["stage5a", "stage5b", "stage6", "stage7", "stage8", "review"]
+    },
+    {
+      "schema_id": "stage0/run-manifest",
+      "schema_version": "v1",
+      "path": "Schemas/stage0/run-manifest.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage0"],
+      "consumer_stages": ["orchestrator", "stage1", "stage2", "stage3", "stage4", "stage5a", "stage6", "stage7", "stage8"]
+    },
+    {
+      "schema_id": "stage0/page-record",
+      "schema_version": "v1",
+      "path": "Schemas/stage0/page-record.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage0"],
+      "consumer_stages": ["stage1", "stage2", "stage3", "stage4", "stage5b"]
+    },
+    {
+      "schema_id": "stage2/read-plan",
+      "schema_version": "v1",
+      "path": "Schemas/stage2/read-plan.schema.json",
+      "stability": "flexible",
+      "producer_stages": ["stage2", "orchestrator"],
+      "consumer_stages": ["stage3", "stage4", "stage5a"]
+    },
+    {
+      "schema_id": "core/observation",
+      "schema_version": "v1",
+      "path": "Schemas/core/observation.schema.json",
+      "stability": "flexible",
+      "producer_stages": ["stage3", "stage4"],
+      "consumer_stages": ["stage5a", "stage6", "stage7"]
+    },
+    {
+      "schema_id": "core/candidate-object",
+      "schema_version": "v1",
+      "path": "Schemas/core/candidate-object.schema.json",
+      "stability": "flexible",
+      "producer_stages": ["stage3", "stage5a"],
+      "consumer_stages": ["stage5a", "stage6", "stage7"]
+    },
+    {
+      "schema_id": "core/candidate-relationship",
+      "schema_version": "v1",
+      "path": "Schemas/core/candidate-relationship.schema.json",
+      "stability": "flexible",
+      "producer_stages": ["stage3", "stage5a"],
+      "consumer_stages": ["stage5a", "stage6", "stage7"]
+    },
+    {
+      "schema_id": "core/conflict-record",
+      "schema_version": "v1",
+      "path": "Schemas/core/conflict-record.schema.json",
+      "stability": "flexible",
+      "producer_stages": ["stage5a", "stage6", "stage7"],
+      "consumer_stages": ["stage5a", "stage5b", "stage6", "stage7", "stage8", "review"]
+    },
+    {
+      "schema_id": "core/unresolved-record",
+      "schema_version": "v1",
+      "path": "Schemas/core/unresolved-record.schema.json",
+      "stability": "flexible",
+      "producer_stages": ["stage5a", "stage6", "stage7"],
+      "consumer_stages": ["stage5a", "stage5b", "stage6", "stage7", "stage8", "review"]
+    },
+    {
+      "schema_id": "review/human-review-action",
+      "schema_version": "v1",
+      "path": "Schemas/review/human-review-action.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage5b", "stage10", "review"],
+      "consumer_stages": ["orchestrator", "stage6", "stage7", "stage8"]
+    },
+    {
+      "schema_id": "stage6/neutral-object",
+      "schema_version": "v1",
+      "path": "Schemas/stage6/neutral-object.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage6"],
+      "consumer_stages": ["stage7", "stage8", "stage8a", "review", "export"]
+    },
+    {
+      "schema_id": "stage6/neutral-model-manifest",
+      "schema_version": "v1",
+      "path": "Schemas/stage6/neutral-model-manifest.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage6"],
+      "consumer_stages": ["orchestrator", "stage7", "stage8", "stage8a", "review"]
+    },
+    {
+      "schema_id": "stage6/verification-readiness",
+      "schema_version": "v1",
+      "path": "Schemas/stage6/verification-readiness.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage6"],
+      "consumer_stages": ["orchestrator", "stage7", "stage8"]
+    },
+    {
+      "schema_id": "stage6/synthesis-slice-result",
+      "schema_version": "v1",
+      "path": "Schemas/stage6/synthesis-slice-result.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage6"],
+      "consumer_stages": ["orchestrator", "stage7", "stage8"]
+    },
+    {
+      "schema_id": "stage6/spatial-anchor-registry",
+      "schema_version": "v1",
+      "path": "Schemas/stage6/spatial-anchor-registry.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage6"],
+      "consumer_stages": ["stage7", "stage8", "stage8a", "review"]
+    },
+    {
+      "schema_id": "stage6/geometry-maturity-registry",
+      "schema_version": "v1",
+      "path": "Schemas/stage6/geometry-maturity-registry.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage6"],
+      "consumer_stages": ["stage7", "stage8", "stage8a", "review"]
+    },
+    {
+      "schema_id": "stage6/topology-graph",
+      "schema_version": "v1",
+      "path": "Schemas/stage6/topology-graph.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage6"],
+      "consumer_stages": ["stage7", "stage8", "stage8a", "review"]
+    },
+    {
+      "schema_id": "stage6/neutral-relationship",
+      "schema_version": "v1",
+      "path": "Schemas/stage6/neutral-relationship.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage6"],
+      "consumer_stages": ["stage7", "stage8", "stage8a", "review", "export"]
+    },
+    {
+      "schema_id": "stage7/verification-manifest",
+      "schema_version": "v1",
+      "path": "Schemas/stage7/verification-manifest.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage7"],
+      "consumer_stages": ["orchestrator", "stage8", "stage8a", "review"]
+    },
+    {
+      "schema_id": "stage7/verification-slice-result",
+      "schema_version": "v1",
+      "path": "Schemas/stage7/verification-slice-result.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage7"],
+      "consumer_stages": ["orchestrator", "stage8", "stage8a", "review"]
+    },
+    {
+      "schema_id": "stage7/verification-issue",
+      "schema_version": "v1",
+      "path": "Schemas/stage7/verification-issue.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage7"],
+      "consumer_stages": ["orchestrator", "stage8", "stage8a", "review"]
+    },
+    {
+      "schema_id": "stage7/verification-finding",
+      "schema_version": "v1",
+      "path": "Schemas/stage7/verification-finding.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage7"],
+      "consumer_stages": ["orchestrator", "stage8", "stage8a", "review"]
+    },
+    {
+      "schema_id": "stage7/confidence-adjustment",
+      "schema_version": "v1",
+      "path": "Schemas/stage7/confidence-adjustment.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage7"],
+      "consumer_stages": ["orchestrator", "stage8", "stage8a", "review"]
+    },
+    {
+      "schema_id": "stage7/invalidation-recommendation",
+      "schema_version": "v1",
+      "path": "Schemas/stage7/invalidation-recommendation.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage7"],
+      "consumer_stages": ["orchestrator", "stage8", "stage8a", "review"]
+    },
+    {
+      "schema_id": "stage7/rerun-recommendation",
+      "schema_version": "v1",
+      "path": "Schemas/stage7/rerun-recommendation.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage7"],
+      "consumer_stages": ["orchestrator", "review"]
+    },
+    {
+      "schema_id": "stage7/review-queue-item",
+      "schema_version": "v1",
+      "path": "Schemas/stage7/review-queue-item.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage7"],
+      "consumer_stages": ["orchestrator", "stage8a", "review"]
+    },
+    {
+      "schema_id": "stage8/scene-graph-manifest",
+      "schema_version": "v1",
+      "path": "Schemas/stage8/scene-graph-manifest.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage8"],
+      "consumer_stages": ["orchestrator", "stage8a", "review"]
+    },
+    {
+      "schema_id": "stage8/scene-node",
+      "schema_version": "v1",
+      "path": "Schemas/stage8/scene-node.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage8"],
+      "consumer_stages": ["stage8a", "review"]
+    },
+    {
+      "schema_id": "stage8/scene-edge",
+      "schema_version": "v1",
+      "path": "Schemas/stage8/scene-edge.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage8"],
+      "consumer_stages": ["stage8a", "review"]
+    },
+    {
+      "schema_id": "stage8/geometry-payload",
+      "schema_version": "v1",
+      "path": "Schemas/stage8/geometry-payload.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage8"],
+      "consumer_stages": ["stage8a", "review"]
+    },
+    {
+      "schema_id": "stage8/layer-registry",
+      "schema_version": "v1",
+      "path": "Schemas/stage8/layer-registry.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage8"],
+      "consumer_stages": ["stage8a", "review"]
+    },
+    {
+      "schema_id": "stage8/filter-index",
+      "schema_version": "v1",
+      "path": "Schemas/stage8/filter-index.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage8"],
+      "consumer_stages": ["stage8a", "review"]
+    },
+    {
+      "schema_id": "stage8/issue-marker",
+      "schema_version": "v1",
+      "path": "Schemas/stage8/issue-marker.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage8"],
+      "consumer_stages": ["orchestrator", "stage8a", "review"]
+    },
+    {
+      "schema_id": "stage8/evidence-link",
+      "schema_version": "v1",
+      "path": "Schemas/stage8/evidence-link.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage8"],
+      "consumer_stages": ["stage8a", "review"]
+    },
+    {
+      "schema_id": "stage8/viewpoint-seed",
+      "schema_version": "v1",
+      "path": "Schemas/stage8/viewpoint-seed.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage8"],
+      "consumer_stages": ["stage8a", "review"]
+    },
+    {
+      "schema_id": "stage8/scene-slice-result",
+      "schema_version": "v1",
+      "path": "Schemas/stage8/scene-slice-result.schema.json",
+      "stability": "stable",
+      "producer_stages": ["stage8"],
+      "consumer_stages": ["orchestrator", "stage8a", "review"]
+    }
+  ]
+}

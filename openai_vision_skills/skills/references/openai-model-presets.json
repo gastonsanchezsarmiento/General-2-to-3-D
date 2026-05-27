@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Working model/preset mapping for local Codex projects. Verify current model IDs and parameter support against official OpenAI docs before implementation.",
+  "defaults": {
+    "endpoint": "responses",
+    "store": false,
+    "temperature": null,
+    "top_p": null,
+    "stream": false,
+    "background": false
+  },
+  "presets": {
+    "fast": {
+      "label": "Fast",
+      "intent": "Lowest latency/cost for triage, simple classification, lightweight extraction, and UI previews.",
+      "model": "gpt-5.4-nano",
+      "fallback_model": "gpt-5.4-mini",
+      "reasoning_effort": "low",
+      "image_detail": "high",
+      "use_for": [
+        "document triage",
+        "sheet classification",
+        "title/block candidate detection",
+        "rough summaries",
+        "region proposal pre-pass"
+      ],
+      "do_not_use_for": [
+        "final engineering dimensions",
+        "critical drawing interpretation",
+        "legal/financial conclusions",
+        "ambiguous extraction without review"
+      ]
+    },
+    "balanced": {
+      "label": "Balanced",
+      "intent": "Good default for ordinary documents where speed matters but quality still matters.",
+      "model": "gpt-5.4-mini",
+      "fallback_model": "gpt-5.5",
+      "reasoning_effort": "medium",
+      "image_detail": "high",
+      "use_for": [
+        "normal document extraction",
+        "forms",
+        "reports",
+        "ordinary PDF pages",
+        "non-critical synthesis"
+      ]
+    },
+    "quality": {
+      "label": "Quality",
+      "intent": "High-quality extraction and synthesis for difficult documents and engineering drawings.",
+      "model": "gpt-5.5",
+      "fallback_model": "gpt-5.4",
+      "reasoning_effort": "high",
+      "image_detail": "original",
+      "use_for": [
+        "engineering drawing extraction",
+        "dense document extraction",
+        "cross-page reasoning",
+        "final synthesis",
+        "ambiguous notes/dimensions"
+      ]
+    },
+    "max_quality": {
+      "label": "Max Quality / Review",
+      "intent": "Best available review/arbitration pass. May be slower and more expensive.",
+      "model": "gpt-5.5",
+      "fallback_model": "gpt-5.5-pro",
+      "reasoning_effort": "xhigh",
+      "image_detail": "original",
+      "background_recommended": true,
+      "use_for": [
+        "critical review",
+        "conflicting evidence",
+        "final arbitration",
+        "high-risk drawing/document interpretation"
+      ]
+    },
+    "engineering_fast_index": {
+      "label": "Engineering Fast Index",
+      "intent": "Fast engineering drawing pre-pass for sheet classification and region proposal only.",
+      "model": "gpt-5.4-mini",
+      "fallback_model": "gpt-5.5",
+      "reasoning_effort": "low",
+      "image_detail": "high",
+      "use_for": [
+        "drawing index extraction",
+        "sheet classification",
+        "region proposal",
+        "crop planning"
+      ],
+      "do_not_use_for": [
+        "final dimensions",
+        "final member sizes",
+        "final schedules",
+        "critical spatial interpretation"
+      ]
+    },
+    "engineering_quality": {
+      "label": "Engineering Quality",
+      "intent": "Default engineering drawing extraction preset.",
+      "model": "gpt-5.5",
+      "fallback_model": "gpt-5.4",
+      "reasoning_effort": "high",
+      "image_detail": "original",
+      "use_for": [
+        "dimensions",
+        "labels",
+        "schedules",
+        "details",
+        "grids",
+        "levels",
+        "cross-sheet references"
+      ]
+    },
+    "engineering_review": {
+      "label": "Engineering Review",
+      "intent": "Review critical or conflicting engineering drawing outputs.",
+      "model": "gpt-5.5",
+      "fallback_model": "gpt-5.5-pro",
+      "reasoning_effort": "xhigh",
+      "image_detail": "original",
+      "background_recommended": true,
+      "use_for": [
+        "conflict resolution",
+        "low-confidence values",
+        "final review",
+        "critical decisions"
+      ]
+    }
+  },
+  "notes": [
+    "Keep this file in project config or skills/references. Do not put model choices in .env.",
+    "Treat model IDs and supported arguments as changeable. Check official OpenAI docs before relying on exact names.",
+    "For GPT-5.5 vision, prefer image_detail original for dense drawings when supported.",
+    "For mini/nano models, prefer high unless official docs confirm original support.",
+    "Do not use image generation models for image understanding."
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage8/layer-registry.schema.json",
+  "title": "LayerRegistry",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "layer_registry_id",
+    "run_id",
+    "scene_graph_id",
+    "layers"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage8/layer-registry" },
+    "schema_version": { "const": "v1" },
+    "layer_registry_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "scene_graph_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "layers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["layer_id", "label"],
+        "properties": {
+          "layer_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+          "label": { "type": "string", "minLength": 1 },
+          "description": { "type": "string" },
+          "node_ids": {
+            "type": "array",
+            "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+          },
+          "edge_ids": {
+            "type": "array",
+            "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+          },
+          "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

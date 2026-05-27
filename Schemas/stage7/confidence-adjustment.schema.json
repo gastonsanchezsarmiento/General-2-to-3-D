@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage7/confidence-adjustment.schema.json",
+  "title": "ConfidenceAdjustment",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "adjustment_id",
+    "run_id",
+    "verification_slice_id",
+    "target_ids",
+    "previous_confidence",
+    "adjusted_confidence",
+    "adjustment_direction",
+    "reason"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage7/confidence-adjustment" },
+    "schema_version": { "const": "v1" },
+    "adjustment_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "verification_slice_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "target_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+      "minItems": 1
+    },
+    "target_artifacts": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "previous_confidence": { "$ref": "../common/base-types.schema.json#/$defs/ConfidenceTier" },
+    "adjusted_confidence": { "$ref": "../common/base-types.schema.json#/$defs/ConfidenceTier" },
+    "adjustment_direction": {
+      "type": "string",
+      "enum": ["upgrade", "downgrade", "confirm", "mark-uncertain"]
+    },
+    "reason": { "type": "string", "minLength": 1 },
+    "supporting_finding_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/evidence-ref.schema.json" }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["proposed", "accepted", "applied", "superseded"]
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

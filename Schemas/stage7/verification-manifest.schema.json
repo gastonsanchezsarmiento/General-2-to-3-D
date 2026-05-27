@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage7/verification-manifest.schema.json",
+  "title": "VerificationManifest",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "verification_run_id",
+    "run_id",
+    "verification_cycle_id",
+    "source_stage6_model_id",
+    "source_stage6_slice_ids_verified",
+    "overall_verification_status"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage7/verification-manifest" },
+    "schema_version": { "const": "v1" },
+    "verification_run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "verification_cycle_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "source_stage6_model_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "source_stage6_slice_ids_verified": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "verification_version": { "$ref": "../common/base-types.schema.json#/$defs/SchemaVersion" },
+    "overall_verification_status": {
+      "type": "string",
+      "enum": ["verified", "verified-with-warnings", "partial-failure", "blocked", "reroute-recommended", "human-review-recommended"]
+    },
+    "finding_artifact_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "issue_artifact_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "confidence_adjustment_artifact_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "invalidation_recommendation_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "rerun_recommendation_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "review_queue_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "conflict_record_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage8/filter-index.schema.json",
+  "title": "FilterIndex",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "filter_index_id",
+    "run_id",
+    "scene_graph_id",
+    "dimensions"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage8/filter-index" },
+    "schema_version": { "const": "v1" },
+    "filter_index_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "scene_graph_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dimension_name", "values"],
+        "properties": {
+          "dimension_name": { "type": "string", "minLength": 1 },
+          "values": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

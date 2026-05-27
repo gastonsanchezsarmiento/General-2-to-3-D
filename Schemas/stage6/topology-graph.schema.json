@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage6/topology-graph.schema.json",
+  "title": "TopologyGraph",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "topology_graph_id",
+    "run_id",
+    "model_id",
+    "edges"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage6/topology-graph" },
+    "schema_version": { "const": "v1" },
+    "topology_graph_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "model_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["edge_id", "relationship_family", "source_object_id", "target_object_id"],
+        "properties": {
+          "edge_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+          "relationship_family": { "type": "string", "minLength": 1 },
+          "source_object_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+          "target_object_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+          "source_anchor_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+          "target_anchor_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+          "epistemic_status": { "$ref": "../common/base-types.schema.json#/$defs/EpistemicStatus" },
+          "evidence_refs": {
+            "type": "array",
+            "items": { "$ref": "../common/evidence-ref.schema.json" }
+          },
+          "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

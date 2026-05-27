@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage6/spatial-anchor-registry.schema.json",
+  "title": "SpatialAnchorRegistry",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "registry_id",
+    "run_id",
+    "model_id",
+    "anchors"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage6/spatial-anchor-registry" },
+    "schema_version": { "const": "v1" },
+    "registry_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "model_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "anchors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["anchor_id", "anchor_type", "display_label"],
+        "properties": {
+          "anchor_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+          "anchor_type": {
+            "type": "string",
+            "enum": ["grid_intersection", "grid_offset", "level", "rl", "ffl", "tos", "eaves", "ridge", "apex", "zone", "point", "symbolic_node"]
+          },
+          "display_label": { "type": "string", "minLength": 1 },
+          "coordinate_state": {
+            "type": "string",
+            "enum": ["symbolic", "local_metric", "absolute_metric", "unknown"]
+          },
+          "coordinates": {
+            "type": "object",
+            "properties": {
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "z": { "type": "number" }
+            },
+            "additionalProperties": false
+          },
+          "level_ref": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+          "evidence_refs": {
+            "type": "array",
+            "items": { "$ref": "../common/evidence-ref.schema.json" }
+          },
+          "lineage": {
+            "type": "array",
+            "items": { "$ref": "../common/base-types.schema.json#/$defs/LineageRef" }
+          },
+          "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

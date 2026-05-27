@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage8/viewpoint-seed.schema.json",
+  "title": "ViewpointSeed",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "viewpoint_seed_id",
+    "run_id",
+    "seed_type"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage8/viewpoint-seed" },
+    "schema_version": { "const": "v1" },
+    "viewpoint_seed_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "seed_type": {
+      "type": "string",
+      "enum": ["object-focus", "issue-focus", "level-overview", "subsystem-overview", "unresolved-cluster"]
+    },
+    "target_scene_node_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "target_issue_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "camera_hint": {
+      "type": "object",
+      "properties": {
+        "position": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "target": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "up": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 3,
+          "maxItems": 3
+        }
+      },
+      "additionalProperties": false
+    },
+    "level_ref": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "note": { "type": "string" },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

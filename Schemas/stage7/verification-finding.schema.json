@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage7/verification-finding.schema.json",
+  "title": "VerificationFinding",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "finding_id",
+    "run_id",
+    "verification_slice_id",
+    "check_family",
+    "outcome",
+    "target_ids",
+    "summary"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage7/verification-finding" },
+    "schema_version": { "const": "v1" },
+    "finding_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "verification_slice_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "check_family": {
+      "type": "string",
+      "enum": ["evidence", "consistency", "topology", "geometry", "dimension", "cross-sheet", "policy", "other"]
+    },
+    "outcome": {
+      "type": "string",
+      "enum": ["pass", "warn", "fail", "info"]
+    },
+    "target_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+      "minItems": 1
+    },
+    "target_artifacts": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "summary": { "type": "string", "minLength": 1 },
+    "details": { "type": "string" },
+    "evidence_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/evidence-ref.schema.json" }
+    },
+    "related_issue_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "related_conflict_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

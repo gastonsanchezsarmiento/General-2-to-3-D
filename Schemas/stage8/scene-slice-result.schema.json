@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage8/scene-slice-result.schema.json",
+  "title": "SceneSliceResult",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "scene_slice_id",
+    "run_id",
+    "scene_generation_cycle_id",
+    "scope_definition",
+    "stage6_artifacts_consumed",
+    "stage7_artifacts_consumed",
+    "nodes_emitted",
+    "edges_emitted",
+    "issue_markers_emitted",
+    "blocked_or_skipped_items",
+    "overall_slice_status"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage8/scene-slice-result" },
+    "schema_version": { "const": "v1" },
+    "scene_slice_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "scene_generation_cycle_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "scope_definition": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "stage6_artifacts_consumed": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "stage7_artifacts_consumed": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "nodes_emitted": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "edges_emitted": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "issue_markers_emitted": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "blocked_or_skipped_items": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "overall_slice_status": {
+      "type": "string",
+      "enum": ["emitted", "emitted-with-provisional", "partial", "blocked", "waiting-on-stage7", "reroute-recommended"]
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

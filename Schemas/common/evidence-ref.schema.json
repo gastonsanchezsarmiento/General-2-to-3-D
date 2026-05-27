@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/common/evidence-ref.schema.json",
+  "title": "EvidenceRef",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "evidence_id",
+    "source_type",
+    "source_artifact",
+    "confidence_tier"
+  ],
+  "properties": {
+    "schema_id": { "const": "common/evidence-ref" },
+    "schema_version": { "const": "v1" },
+    "evidence_id": { "$ref": "base-types.schema.json#/$defs/Id" },
+    "source_type": {
+      "type": "string",
+      "enum": ["vision", "text_layer", "vector", "schedule", "human", "derived"]
+    },
+    "source_artifact": { "$ref": "base-types.schema.json#/$defs/ArtifactRef" },
+    "source_file_id": { "$ref": "base-types.schema.json#/$defs/Id" },
+    "page_id": { "$ref": "base-types.schema.json#/$defs/Id" },
+    "region_id": { "$ref": "base-types.schema.json#/$defs/Id" },
+    "crop_id": { "$ref": "base-types.schema.json#/$defs/Id" },
+    "bbox": { "$ref": "base-types.schema.json#/$defs/NormalizedBBox" },
+    "confidence_tier": { "$ref": "base-types.schema.json#/$defs/ConfidenceTier" },
+    "confidence_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "note": { "type": "string" },
+    "extensions": { "$ref": "base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

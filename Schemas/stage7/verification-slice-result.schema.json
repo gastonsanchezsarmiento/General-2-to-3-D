@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage7/verification-slice-result.schema.json",
+  "title": "VerificationSliceResult",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "verification_slice_id",
+    "run_id",
+    "verification_cycle_id",
+    "slice_scope_definition",
+    "stage6_artifacts_checked",
+    "finding_ids",
+    "issue_ids",
+    "exit_status"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage7/verification-slice-result" },
+    "schema_version": { "const": "v1" },
+    "verification_slice_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "verification_cycle_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "slice_scope_definition": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "stage6_artifacts_checked": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "finding_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "finding_artifact_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "issue_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "issue_artifact_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "confidence_adjustment_artifact_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "invalidation_recommendation_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "invalidation_scope_recommendation": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "additionalProperties": true
+        }
+      ]
+    },
+    "rerun_recommendation": { "type": "string" },
+    "rerun_recommendation_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "review_queue_item_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "conflict_record_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "exit_status": {
+      "type": "string",
+      "enum": ["verified", "verified-with-warnings", "partial-failure", "blocked", "reroute-stage6", "reroute-stage3", "reroute-stage4", "reroute-stage2", "human-review-recommended"]
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

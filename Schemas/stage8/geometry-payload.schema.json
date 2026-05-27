@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage8/geometry-payload.schema.json",
+  "title": "GeometryPayload",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "geometry_payload_id",
+    "run_id",
+    "source_scene_node_id",
+    "representation_mode",
+    "payload_type"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage8/geometry-payload" },
+    "schema_version": { "const": "v1" },
+    "geometry_payload_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "source_scene_node_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "representation_mode": {
+      "type": "string",
+      "enum": ["none-symbolic", "point-marker", "line-proxy", "polyline-proxy", "planar-proxy", "volume-proxy", "placeholder-asset-ref", "external-mesh-ref", "ghost-unresolved"]
+    },
+    "payload_type": {
+      "type": "string",
+      "enum": ["none", "inline_descriptor", "gltf", "glb", "polyline", "planar_shape", "volume_proxy", "mesh_ref", "point_set"]
+    },
+    "payload_artifact": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" },
+    "payload_reference": { "type": "string" },
+    "bounds": {
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "max": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 3,
+          "maxItems": 3
+        }
+      },
+      "additionalProperties": false
+    },
+    "coordinate_frame_reference": { "type": "string" },
+    "maturity_compatibility": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/GeometryMaturity" }
+    },
+    "unresolved_flag": { "type": "boolean" },
+    "approximate_flag": { "type": "boolean" },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

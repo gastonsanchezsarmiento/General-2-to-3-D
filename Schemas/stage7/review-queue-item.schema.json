@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage7/review-queue-item.schema.json",
+  "title": "ReviewQueueItem",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "review_queue_item_id",
+    "run_id",
+    "verification_slice_id",
+    "review_reason",
+    "target_ids",
+    "priority",
+    "recommended_destination",
+    "status"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage7/review-queue-item" },
+    "schema_version": { "const": "v1" },
+    "review_queue_item_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "verification_slice_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "review_reason": { "type": "string", "minLength": 1 },
+    "target_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+      "minItems": 1
+    },
+    "target_artifacts": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["high", "medium", "low"]
+    },
+    "recommended_destination": {
+      "type": "string",
+      "enum": ["stage8", "stage8a", "stage10", "human-review-board", "orchestrator"]
+    },
+    "linked_issue_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "linked_finding_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["open", "scheduled", "presented", "resolved", "dismissed"]
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

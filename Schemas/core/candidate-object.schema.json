@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/core/candidate-object.schema.json",
+  "title": "CandidateObject",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "candidate_object_id",
+    "run_id",
+    "object_family",
+    "supporting_observation_ids",
+    "supporting_evidence",
+    "confidence_tier"
+  ],
+  "properties": {
+    "schema_id": { "const": "core/candidate-object" },
+    "schema_version": { "const": "v1" },
+    "candidate_object_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "object_family": { "type": "string", "minLength": 1 },
+    "display_label": { "type": "string" },
+    "supporting_observation_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+      "minItems": 1
+    },
+    "supporting_evidence": {
+      "type": "array",
+      "items": { "$ref": "../common/evidence-ref.schema.json" },
+      "minItems": 1
+    },
+    "confidence_tier": { "$ref": "../common/base-types.schema.json#/$defs/ConfidenceTier" },
+    "spatial_hints": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "conflict_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "unresolved_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "lineage": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/LineageRef" }
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

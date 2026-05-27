@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage8/issue-marker.schema.json",
+  "title": "IssueMarker",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "issue_marker_id",
+    "run_id",
+    "source_stage7_issue_id",
+    "severity",
+    "category"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage8/issue-marker" },
+    "schema_version": { "const": "v1" },
+    "issue_marker_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "source_stage7_issue_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "target_scene_node_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "target_scene_edge_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["critical", "major", "minor", "enhancement"]
+    },
+    "category": {
+      "type": "string",
+      "enum": ["schema-mismatch", "hallucination", "missing-data", "logic-error", "topology-error", "cross-sheet-contradiction", "geometry-plausibility-failure", "unsupported-inference"]
+    },
+    "spatial_anchor": { "$ref": "../common/base-types.schema.json#/$defs/SpatialAnchor" },
+    "linked_evidence_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/evidence-ref.schema.json" }
+    },
+    "review_queue_artifact_ref": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

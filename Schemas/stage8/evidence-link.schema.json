@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage8/evidence-link.schema.json",
+  "title": "EvidenceLink",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "evidence_link_id",
+    "run_id",
+    "target_kind",
+    "target_scene_id",
+    "linked_evidence_ids"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage8/evidence-link" },
+    "schema_version": { "const": "v1" },
+    "evidence_link_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "target_kind": {
+      "type": "string",
+      "enum": ["node", "edge"]
+    },
+    "target_scene_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "source_stage6_object_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "source_stage6_relationship_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "linked_evidence_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "linked_source_artifact_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "linked_page_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "linked_region_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "linked_crop_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "provenance_summary": { "type": "string" },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

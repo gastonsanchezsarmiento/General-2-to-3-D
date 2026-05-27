@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/common/base-types.schema.json",
+  "title": "PlanTo3DBaseTypes",
+  "type": "object",
+  "$defs": {
+    "Id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "SchemaVersion": {
+      "type": "string",
+      "pattern": "^v[0-9]+(\\.[0-9]+)?$"
+    },
+    "Timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ConfidenceTier": {
+      "type": "string",
+      "enum": ["high", "medium", "low", "contested", "unknown"]
+    },
+    "EpistemicStatus": {
+      "type": "string",
+      "enum": [
+        "direct",
+        "derived",
+        "inferred_schematic",
+        "inferred_approximate",
+        "unresolved",
+        "human_corrected"
+      ]
+    },
+    "GeometryMaturity": {
+      "type": "string",
+      "enum": ["semantic", "anchored", "schematic", "approximate", "metric", "unresolved"]
+    },
+    "ArtifactRef": {
+      "type": "object",
+      "required": ["artifact_id", "artifact_type"],
+      "properties": {
+        "artifact_id": { "$ref": "#/$defs/Id" },
+        "artifact_type": { "type": "string", "minLength": 1 },
+        "schema_id": { "type": "string" },
+        "schema_version": { "$ref": "#/$defs/SchemaVersion" },
+        "run_id": { "$ref": "#/$defs/Id" },
+        "path": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "LineageRef": {
+      "type": "object",
+      "required": ["source_schema_id", "source_id"],
+      "properties": {
+        "source_schema_id": { "type": "string", "minLength": 1 },
+        "source_id": { "$ref": "#/$defs/Id" },
+        "relationship": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "NormalizedBBox": {
+      "type": "object",
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0, "maximum": 1 },
+        "y": { "type": "number", "minimum": 0, "maximum": 1 },
+        "width": { "type": "number", "minimum": 0, "maximum": 1 },
+        "height": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "SpatialAnchor": {
+      "type": "object",
+      "required": ["anchor_type", "anchor_ref"],
+      "properties": {
+        "anchor_type": {
+          "type": "string",
+          "enum": ["grid", "grid_intersection", "level", "region", "zone", "point", "symbolic_node"]
+        },
+        "anchor_ref": { "type": "string", "minLength": 1 },
+        "offset_note": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "Extensions": {
+      "type": "object",
+      "default": {},
+      "additionalProperties": true
+    }
+  }
+}

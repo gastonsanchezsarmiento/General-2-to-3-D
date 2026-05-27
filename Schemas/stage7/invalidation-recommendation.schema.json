@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage7/invalidation-recommendation.schema.json",
+  "title": "InvalidationRecommendation",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "invalidation_recommendation_id",
+    "run_id",
+    "verification_slice_id",
+    "invalidation_type",
+    "target_scope",
+    "rationale",
+    "recommended_route"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage7/invalidation-recommendation" },
+    "schema_version": { "const": "v1" },
+    "invalidation_recommendation_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "verification_slice_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "invalidation_type": {
+      "type": "string",
+      "enum": ["direct", "relational", "structural"]
+    },
+    "target_scope": {
+      "type": "object",
+      "properties": {
+        "target_ids": {
+          "type": "array",
+          "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+        },
+        "target_artifacts": {
+          "type": "array",
+          "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+        },
+        "downstream_stage_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        { "required": ["target_ids"] },
+        { "required": ["target_artifacts"] },
+        { "required": ["downstream_stage_ids"] }
+      ]
+    },
+    "rationale": { "type": "string", "minLength": 1 },
+    "recommended_route": {
+      "type": "string",
+      "enum": ["reroute-stage6", "reroute-stage3", "reroute-stage4", "reroute-stage2", "human-review", "block"]
+    },
+    "supporting_issue_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "supporting_finding_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

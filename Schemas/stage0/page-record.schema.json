@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage0/page-record.schema.json",
+  "title": "PageRecord",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "page_id",
+    "source_document_id",
+    "page_number"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage0/page-record" },
+    "schema_version": { "const": "v1" },
+    "page_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "source_document_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "page_number": { "type": "integer", "minimum": 1 },
+    "preview_artifact": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" },
+    "master_artifact": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" },
+    "page_size": {
+      "type": "object",
+      "properties": {
+        "width": { "type": "number", "minimum": 0 },
+        "height": { "type": "number", "minimum": 0 },
+        "unit": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "rotation_degrees": { "type": "number" },
+    "sheet_number_hint": { "type": "string" },
+    "title_hint": { "type": "string" },
+    "text_layer_available": { "type": "boolean" },
+    "vector_content_available": { "type": "boolean" },
+    "likely_scanned": { "type": "boolean" },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

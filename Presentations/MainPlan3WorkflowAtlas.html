@@ -1,0 +1,2085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MainPlan3 Workflow Atlas</title>
+  <style>
+    :root {
+      --bg: #efe7da;
+      --bg-deep: #d7c7b1;
+      --panel: rgba(255, 250, 241, 0.92);
+      --panel-strong: #fffaf2;
+      --ink: #1c272d;
+      --muted: #5d6d72;
+      --line: rgba(28, 39, 45, 0.12);
+      --accent: #0d5f73;
+      --accent-soft: rgba(13, 95, 115, 0.12);
+      --warm: #c56a3a;
+      --warm-soft: rgba(197, 106, 58, 0.12);
+      --green: #2d6d57;
+      --green-soft: rgba(45, 109, 87, 0.12);
+      --berry: #7e4b44;
+      --berry-soft: rgba(126, 75, 68, 0.12);
+      --shadow: 0 20px 60px rgba(18, 26, 30, 0.14);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --workflow-width: 1640px;
+      --workflow-height: 1060px;
+      --artifact-width: 1640px;
+      --artifact-height: 840px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Aptos", "Segoe UI Variable Text", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(13, 95, 115, 0.16), transparent 30%),
+        radial-gradient(circle at top right, rgba(197, 106, 58, 0.18), transparent 24%),
+        linear-gradient(180deg, #f5efe4 0%, #ebe2d3 52%, #e3d6c2 100%);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(28, 39, 45, 0.024) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(28, 39, 45, 0.024) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.18));
+    }
+
+    button,
+    select,
+    input {
+      font: inherit;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: min(calc(100% - 28px), 1680px);
+      margin: 16px auto 26px;
+      display: grid;
+      grid-template-columns: 330px minmax(0, 1fr) 360px;
+      gap: 18px;
+    }
+
+    .shell.inspector-collapsed {
+      grid-template-columns: 330px minmax(0, 1fr);
+    }
+
+    .panel {
+      background: var(--panel);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+
+    .sidebar,
+    .inspector {
+      position: sticky;
+      top: 16px;
+      align-self: start;
+      padding: 22px 20px;
+      max-height: calc(100vh - 32px);
+      overflow: auto;
+    }
+
+    .inspector.is-hidden {
+      display: none;
+    }
+
+    .sidebar h1,
+    .inspector h2,
+    .inspector h3,
+    .hero-copy h2,
+    .card h3,
+    .node-title {
+      font-family: "Bahnschrift", "Aptos Display", "Segoe UI Variable Display", sans-serif;
+      letter-spacing: -0.03em;
+    }
+
+    .sidebar h1 {
+      margin: 0;
+      font-size: 1.95rem;
+      line-height: 0.96;
+    }
+
+    .lede,
+    .muted,
+    .small-copy,
+    .artifact-copy,
+    .inspector p,
+    .inspector li,
+    .card p,
+    .control-note,
+    .legend p {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .lede {
+      margin: 12px 0 0;
+      font-size: 0.95rem;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--warm);
+    }
+
+    .chip-row,
+    .legend-list,
+    .stage-links,
+    .metric-grid,
+    .meta-grid,
+    .artifact-stage-list,
+    .detail-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip,
+    .tag,
+    .legend-chip,
+    .artifact-stage,
+    .detail-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 30px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      border: 1px solid rgba(13, 95, 115, 0.12);
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--ink);
+    }
+
+    .chip.primary,
+    .detail-tag.primary {
+      background: var(--accent-soft);
+      color: #083f4d;
+    }
+
+    .chip.warm,
+    .detail-tag.warm {
+      background: var(--warm-soft);
+      color: #7e431f;
+      border-color: rgba(197, 106, 58, 0.16);
+    }
+
+    .chip.green,
+    .detail-tag.green {
+      background: var(--green-soft);
+      color: #214d40;
+      border-color: rgba(45, 109, 87, 0.16);
+    }
+
+    .section {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .section h2,
+    .section h3,
+    .inspector h2,
+    .inspector h3 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+    }
+
+    .control-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .control {
+      display: grid;
+      gap: 8px;
+    }
+
+    .control label,
+    .toggle-row span,
+    .stage-link-label,
+    .artifact-title,
+    .node-meta,
+    .edge-label,
+    .artifact-role,
+    .panel-top label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    .control select,
+    .control input[type="search"] {
+      width: 100%;
+      border: 1px solid rgba(13, 95, 115, 0.12);
+      background: rgba(255, 255, 255, 0.82);
+      border-radius: 14px;
+      padding: 12px 14px;
+      color: var(--ink);
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+    }
+
+    .toggle-row input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+    }
+
+    .stage-links {
+      flex-direction: column;
+    }
+
+    .stage-link {
+      width: 100%;
+      border: 1px solid transparent;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.66);
+      color: var(--ink);
+      display: grid;
+      gap: 4px;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .stage-link:hover,
+    .stage-link:focus-visible,
+    .stage-link.active {
+      transform: translateX(2px);
+      border-color: rgba(13, 95, 115, 0.16);
+      box-shadow: 0 10px 26px rgba(13, 95, 115, 0.08);
+      outline: none;
+    }
+
+    .main {
+      display: grid;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .hero {
+      padding: 28px 28px 24px;
+      background: linear-gradient(180deg, rgba(255, 250, 241, 0.98), rgba(249, 244, 237, 0.9));
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .hero-copy h2 {
+      margin: 0;
+      font-size: clamp(2.3rem, 4vw, 3.8rem);
+      line-height: 0.94;
+      max-width: 10ch;
+    }
+
+    .hero-copy p {
+      max-width: 64ch;
+      margin: 14px 0 0;
+      line-height: 1.65;
+    }
+
+    .hero-card {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .metric-grid {
+      gap: 10px;
+    }
+
+    .metric {
+      min-width: calc(50% - 5px);
+      background: linear-gradient(180deg, rgba(13, 95, 115, 0.08), rgba(255, 255, 255, 0.86));
+      border: 1px solid rgba(13, 95, 115, 0.12);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.7rem;
+      line-height: 1;
+      color: #083f4d;
+      margin-bottom: 6px;
+      letter-spacing: -0.05em;
+    }
+
+    .surface {
+      padding: 22px;
+    }
+
+    .panel-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    .panel-top h3 {
+      margin: 0;
+      font-size: 1.35rem;
+    }
+
+    .view-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .nav-btn {
+      border: 1px solid rgba(13, 95, 115, 0.12);
+      background: rgba(255, 255, 255, 0.84);
+      color: var(--ink);
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 160ms ease, transform 160ms ease;
+    }
+
+    .nav-btn:hover,
+    .nav-btn:focus-visible {
+      background: var(--accent-soft);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .nav-btn.active {
+      background: var(--accent-soft);
+    }
+
+    .viewport-note {
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .mode-pill {
+      border: 1px solid rgba(13, 95, 115, 0.12);
+      background: rgba(255, 255, 255, 0.84);
+      color: var(--ink);
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 160ms ease, transform 160ms ease;
+    }
+
+    .mode-pill:hover,
+    .mode-pill:focus-visible,
+    .mode-pill.active {
+      background: var(--accent-soft);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .board-wrap {
+      position: relative;
+      overflow: auto;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(255, 251, 246, 0.95), rgba(245, 239, 229, 0.9));
+      border: 1px solid var(--line);
+      padding: 16px;
+      min-height: min(78vh, 860px);
+      overflow: hidden;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .board-wrap.panning {
+      cursor: grabbing;
+    }
+
+    .board-wrap:focus-visible {
+      outline: 2px solid rgba(13, 95, 115, 0.34);
+      outline-offset: 2px;
+    }
+
+    .board {
+      position: relative;
+      top: 0;
+      left: 0;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 10% 12%, rgba(13, 95, 115, 0.1), transparent 24%),
+        radial-gradient(circle at 92% 14%, rgba(197, 106, 58, 0.12), transparent 28%),
+        linear-gradient(180deg, rgba(255, 253, 248, 0.98), rgba(248, 243, 235, 0.96));
+      border: 1px solid rgba(28, 39, 45, 0.08);
+      overflow: hidden;
+      transform-origin: 0 0;
+      will-change: transform;
+    }
+
+    .board.workflow {
+      width: var(--workflow-width);
+      height: var(--workflow-height);
+    }
+
+    .board.artifact {
+      width: var(--artifact-width);
+      height: var(--artifact-height);
+      display: none;
+    }
+
+    .board.active {
+      display: block;
+    }
+
+    .grid-backing {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(28, 39, 45, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(28, 39, 45, 0.03) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.2));
+    }
+
+    .lane-label {
+      position: absolute;
+      left: 22px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid var(--line);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    .lane-zone {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      border-radius: 24px;
+      border: 1px dashed rgba(28, 39, 45, 0.08);
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .edge-svg,
+    .artifact-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .edge-path {
+      fill: none;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .edge-path.main {
+      stroke: rgba(13, 95, 115, 0.9);
+    }
+
+    .edge-path.optional {
+      stroke: rgba(197, 106, 58, 0.95);
+      stroke-dasharray: 10 10;
+    }
+
+    .edge-path.human {
+      stroke: rgba(126, 75, 68, 0.92);
+      stroke-dasharray: 14 10;
+    }
+
+    .edge-path.artifact {
+      stroke: rgba(45, 109, 87, 0.92);
+    }
+
+    .edge-label {
+      font-size: 11px;
+      fill: #58686f;
+      letter-spacing: 0.08em;
+    }
+
+    .stage-node,
+    .artifact-node {
+      position: absolute;
+      border: 1px solid rgba(28, 39, 45, 0.1);
+      border-radius: 22px;
+      padding: 16px;
+      background: rgba(255, 252, 247, 0.96);
+      box-shadow: 0 16px 36px rgba(23, 31, 36, 0.08);
+      display: grid;
+      gap: 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, opacity 160ms ease, filter 160ms ease;
+    }
+
+    .stage-node {
+      width: 220px;
+      min-height: 128px;
+    }
+
+    .artifact-node {
+      width: 250px;
+      min-height: 118px;
+      cursor: default;
+    }
+
+    .stage-node:hover,
+    .stage-node:focus-visible {
+      transform: translateY(-3px);
+      border-color: rgba(13, 95, 115, 0.22);
+      box-shadow: 0 18px 42px rgba(13, 95, 115, 0.12);
+      outline: none;
+    }
+
+    .stage-node.active,
+    .artifact-node.active {
+      border-color: rgba(13, 95, 115, 0.34);
+      box-shadow: 0 20px 50px rgba(13, 95, 115, 0.14);
+      transform: translateY(-3px);
+    }
+
+    .dimmed {
+      opacity: 0.22;
+      filter: grayscale(0.12);
+    }
+
+    .kind-prep { background: linear-gradient(180deg, rgba(13, 95, 115, 0.08), rgba(255, 252, 247, 0.98)); }
+    .kind-read { background: linear-gradient(180deg, rgba(45, 109, 87, 0.08), rgba(255, 252, 247, 0.98)); }
+    .kind-support { background: linear-gradient(180deg, rgba(197, 106, 58, 0.1), rgba(255, 252, 247, 0.98)); }
+    .kind-synth { background: linear-gradient(180deg, rgba(126, 75, 68, 0.1), rgba(255, 252, 247, 0.98)); }
+    .kind-verify { background: linear-gradient(180deg, rgba(110, 110, 58, 0.1), rgba(255, 252, 247, 0.98)); }
+    .kind-review { background: linear-gradient(180deg, rgba(71, 88, 118, 0.1), rgba(255, 252, 247, 0.98)); }
+    .kind-human { background: linear-gradient(180deg, rgba(126, 75, 68, 0.08), rgba(255, 252, 247, 0.98)); }
+    .kind-export { background: linear-gradient(180deg, rgba(54, 74, 91, 0.12), rgba(255, 252, 247, 0.98)); }
+
+    .node-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .node-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(28, 39, 45, 0.08);
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+    }
+
+    .node-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: #173942;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .node-title {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.05;
+    }
+
+    .node-short {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .node-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .node-badge {
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 0.74rem;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(28, 39, 45, 0.08);
+      color: var(--muted);
+    }
+
+    .artifact-node .artifact-title {
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .artifact-node h4 {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+
+    .artifact-copy {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    .artifact-stage {
+      background: rgba(13, 95, 115, 0.08);
+      border-color: rgba(13, 95, 115, 0.1);
+      color: #22444e;
+    }
+
+    .legend {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+      margin-top: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+    }
+
+    .legend-line {
+      width: 42px;
+      height: 0;
+      border-top: 3px solid rgba(13, 95, 115, 0.92);
+      border-radius: 999px;
+      flex: 0 0 auto;
+    }
+
+    .legend-line.optional {
+      border-top-color: rgba(197, 106, 58, 0.95);
+      border-top-style: dashed;
+    }
+
+    .legend-line.human {
+      border-top-color: rgba(126, 75, 68, 0.92);
+      border-top-style: dashed;
+    }
+
+    .legend-line.artifact {
+      border-top-color: rgba(45, 109, 87, 0.92);
+    }
+
+    .inspector-head {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .inspector-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .inspector-close {
+      border: 1px solid rgba(13, 95, 115, 0.12);
+      background: rgba(255, 255, 255, 0.84);
+      color: var(--ink);
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 160ms ease, transform 160ms ease;
+      flex: 0 0 auto;
+    }
+
+    .inspector-close:hover,
+    .inspector-close:focus-visible {
+      background: var(--accent-soft);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .inspector-card,
+    .detail-card {
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .detail-card + .detail-card {
+      margin-top: 12px;
+    }
+
+    .detail-card ul {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .detail-card li {
+      margin: 0;
+    }
+
+    .stage-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      height: 42px;
+      padding: 0 10px;
+      border-radius: 12px;
+      background: rgba(13, 95, 115, 0.1);
+      color: #083f4d;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .meta-card {
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .meta-card strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.96rem;
+      color: var(--ink);
+    }
+
+    .empty-note {
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px dashed rgba(28, 39, 45, 0.16);
+      background: rgba(255, 255, 255, 0.56);
+      color: var(--muted);
+    }
+
+    @media (max-width: 1520px) {
+      .shell {
+        grid-template-columns: 300px minmax(0, 1fr);
+      }
+
+      .inspector {
+        position: static;
+        grid-column: 1 / -1;
+        max-height: none;
+      }
+    }
+
+    @media (max-width: 1120px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar,
+      .inspector {
+        position: static;
+        max-height: none;
+      }
+
+      .hero-grid,
+      .panel-top,
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-top {
+        display: grid;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: min(calc(100% - 14px), 1680px);
+        margin: 8px auto 18px;
+      }
+
+      .sidebar,
+      .surface,
+      .inspector,
+      .hero {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .metric {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="panel sidebar">
+      <p class="eyebrow">Interactive Planning Atlas</p>
+      <h1>MainPlan3 Workflow Atlas</h1>
+      <p class="lede">Graph view for the architecture: stage flow, optional support branch, human review loops, and artifact handoffs.</p>
+
+      <div class="chip-row">
+        <span class="chip primary">Graph map</span>
+        <span class="chip warm">Optional Stage 4 branch</span>
+        <span class="chip green">Artifact flow</span>
+      </div>
+
+      <div class="section">
+        <h2>Controls</h2>
+        <div class="control-grid">
+          <div class="control">
+            <label for="viewSelect">View</label>
+            <select id="viewSelect">
+              <option value="workflow">Workflow graph</option>
+              <option value="artifact">Artifact flow</option>
+            </select>
+          </div>
+          <div class="control">
+            <label for="focusSelect">Focus</label>
+            <select id="focusSelect">
+              <option value="all">Whole architecture</option>
+              <option value="core">Core line only</option>
+              <option value="poc">POC execution slice</option>
+              <option value="review">Review and verification</option>
+              <option value="synthesis">Stage 5 and 6 emphasis</option>
+            </select>
+          </div>
+          <div class="control">
+            <label for="stageSearch">Search stage</label>
+            <input id="stageSearch" type="search" placeholder="Try: packaging, verification, support, review">
+          </div>
+          <label class="toggle-row" for="toggleOptional">
+            <span>Show optional support branch</span>
+            <input id="toggleOptional" type="checkbox" checked>
+          </label>
+          <label class="toggle-row" for="toggleHuman">
+            <span>Show human and rerun loops</span>
+            <input id="toggleHuman" type="checkbox" checked>
+          </label>
+          <label class="toggle-row" for="toggleLabels">
+            <span>Show edge labels</span>
+            <input id="toggleLabels" type="checkbox" checked>
+          </label>
+        </div>
+        <p class="control-note">Use the filters to isolate the main path, the POC slice, or the review and invalidation surfaces.</p>
+      </div>
+
+      <div class="section">
+        <h2>Jump To Stage</h2>
+        <div class="stage-links" id="stageLinks"></div>
+      </div>
+
+      <div class="legend">
+        <div>
+          <p class="eyebrow">Legend</p>
+          <p class="small-copy">The graph separates the core line, optional deterministic help, and human correction loops.</p>
+        </div>
+        <div class="legend-row"><span class="legend-line"></span><span>Main execution flow</span></div>
+        <div class="legend-row"><span class="legend-line optional"></span><span>Optional support branch</span></div>
+        <div class="legend-row"><span class="legend-line human"></span><span>Human feedback or rerun loop</span></div>
+        <div class="legend-row"><span class="legend-line artifact"></span><span>Artifact dependency</span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="panel hero">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Visual Execution Model</p>
+            <h2>See the plan as a system, not just a document.</h2>
+            <p>This atlas turns MainPlan3 into a graphical planning surface: stages, branches, handoffs, loops, and artifact contracts. The workflow graph shows orchestration logic. The artifact view shows what gets written and what later stages depend on.</p>
+            <div class="detail-tags" style="margin-top: 18px;">
+              <span class="detail-tag primary">Stages 0 to 11</span>
+              <span class="detail-tag warm">Stage 4 stays optional</span>
+              <span class="detail-tag green">Stage 5 and 6 boundary visible</span>
+            </div>
+          </div>
+          <div class="hero-card">
+            <div class="metric-grid">
+              <div class="metric"><strong>13</strong><span>stage nodes including 8A</span></div>
+              <div class="metric"><strong>2</strong><span>graph modes</span></div>
+              <div class="metric"><strong>3</strong><span>path types</span></div>
+              <div class="metric"><strong>1</strong><span>inspector for exact details</span></div>
+            </div>
+            <p class="muted">Best used locally in a browser while you refine stage contracts and decide how reruns, support extraction, and packaging should behave.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel surface">
+        <div class="panel-top">
+          <div>
+            <p class="eyebrow">Graph Surface</p>
+            <h3 id="boardTitle">Workflow graph</h3>
+            <p class="muted" id="boardCopy">Core line, optional deterministic support, and human reroute surfaces.</p>
+          </div>
+          <div class="view-actions">
+            <button class="mode-pill active" type="button" data-view="workflow">Workflow graph</button>
+            <button class="mode-pill" type="button" data-view="artifact">Artifact flow</button>
+            <button class="nav-btn" id="toggleInspectorBtn" type="button">Hide inspector</button>
+            <button class="nav-btn" id="zoomOutBtn" type="button" aria-label="Zoom out">-</button>
+            <button class="nav-btn" id="resetViewBtn" type="button">Reset view</button>
+            <button class="nav-btn" id="zoomInBtn" type="button" aria-label="Zoom in">+</button>
+            <span class="viewport-note">Wheel to zoom. Drag the background to pan.</span>
+          </div>
+        </div>
+
+        <div class="board-wrap" id="boardWrap" tabindex="0" aria-label="Interactive graph canvas">
+          <div class="board workflow active" id="workflowBoard">
+            <div class="grid-backing"></div>
+            <div class="lane-zone" style="top: 72px; bottom: 640px;"></div>
+            <div class="lane-zone" style="top: 350px; bottom: 380px;"></div>
+            <div class="lane-zone" style="top: 628px; bottom: 100px;"></div>
+            <div class="lane-label" style="top: 22px;">Reading and planning</div>
+            <div class="lane-label" style="top: 300px;">Support, packaging, synthesis</div>
+            <div class="lane-label" style="top: 578px;">Verification, review, export</div>
+            <svg class="edge-svg" id="workflowSvg" viewBox="0 0 1640 1060" aria-hidden="true"></svg>
+            <div id="workflowNodes"></div>
+          </div>
+
+          <div class="board artifact" id="artifactBoard">
+            <div class="grid-backing"></div>
+            <div class="lane-zone" style="top: 70px; bottom: 520px;"></div>
+            <div class="lane-zone" style="top: 300px; bottom: 300px;"></div>
+            <div class="lane-zone" style="top: 530px; bottom: 70px;"></div>
+            <div class="lane-label" style="top: 22px;">Early run backbone</div>
+            <div class="lane-label" style="top: 252px;">Interpretation and model artifacts</div>
+            <div class="lane-label" style="top: 482px;">Review-state artifacts</div>
+            <svg class="artifact-svg" id="artifactSvg" viewBox="0 0 1640 840" aria-hidden="true"></svg>
+            <div id="artifactNodes"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="panel inspector" id="inspector">
+      <div class="inspector-head">
+        <div class="inspector-top">
+          <p class="eyebrow">Inspector</p>
+          <button class="inspector-close" id="closeInspectorBtn" type="button" aria-label="Close inspector">×</button>
+        </div>
+        <div class="inspector-card">
+          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
+            <span class="stage-number" id="inspectorNumber">0</span>
+            <div>
+              <h2 id="inspectorTitle" style="margin: 0;">Ingestion And Preparation</h2>
+              <p id="inspectorKind" class="muted" style="margin: 4px 0 0;">Preparation stage</p>
+            </div>
+          </div>
+          <p id="inspectorShort" style="margin: 0;">Prepare the pack and working materials without interpreting it yet.</p>
+        </div>
+      </div>
+
+      <div class="meta-grid">
+        <div class="meta-card">
+          <span class="node-meta">Entry role</span>
+          <strong id="inspectorEntry">Run start</strong>
+        </div>
+        <div class="meta-card">
+          <span class="node-meta">Connection role</span>
+          <strong id="inspectorConnection">Feeds Stage 1</strong>
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <h3>Goal</h3>
+        <p id="inspectorGoal"></p>
+      </div>
+
+      <div class="detail-card">
+        <h3>Critical Rule</h3>
+        <p id="inspectorRule"></p>
+      </div>
+
+      <div class="detail-card">
+        <h3>Inputs And Outputs</h3>
+        <div class="detail-tags" id="inspectorArtifacts"></div>
+      </div>
+
+      <div class="detail-card">
+        <h3>Why It Exists</h3>
+        <p id="inspectorWhy"></p>
+      </div>
+
+      <div class="detail-card">
+        <h3>Downstream And Loop Surface</h3>
+        <div class="detail-tags" id="inspectorConnections"></div>
+      </div>
+
+      <div class="detail-card">
+        <h3>Research Anchors</h3>
+        <ul id="inspectorRefs"></ul>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const iconMap = {
+      prep: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h10"></path><rect x="4" y="4" width="16" height="16" rx="3"></rect></svg>',
+      read: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg>',
+      support: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"></rect><rect x="14" y="4" width="6" height="6" rx="1"></rect><rect x="4" y="14" width="6" height="6" rx="1"></rect><path d="M17 10v4"></path><path d="M10 17h4"></path><path d="M7 10v4"></path><rect x="14" y="14" width="6" height="6" rx="1"></rect></svg>',
+      synth: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2"></circle><circle cx="12" cy="5" r="2"></circle><circle cx="19" cy="12" r="2"></circle><circle cx="12" cy="19" r="2"></circle><path d="M6.7 10.7 10.3 6.7"></path><path d="M13.7 6.7 17.3 10.7"></path><path d="M17.3 13.3 13.7 17.3"></path><path d="M10.3 17.3 6.7 13.3"></path></svg>',
+      verify: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 6 5v6c0 4.5 2.5 7 6 10 3.5-3 6-5.5 6-10V5l-6-2Z"></path><path d="m9.5 12 1.8 1.8 3.4-4"></path></svg>',
+      review: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8"></path><path d="M12 16v4"></path></svg>',
+      human: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4"></path><path d="M11 10V5a1.5 1.5 0 0 1 3 0v5"></path><path d="M14 10V6a1.5 1.5 0 0 1 3 0v7"></path><path d="M8 10.5V9a1.5 1.5 0 0 0-3 0v5.5c0 3 2 5.5 5.5 5.5H15c2.5 0 4.5-2 4.5-4.5V11"></path></svg>',
+      export: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11"></path><path d="m8 10 4 4 4-4"></path><rect x="4" y="16" width="16" height="5" rx="2"></rect></svg>'
+    };
+
+    const stages = [
+      {
+        id: 'stage-0',
+        number: '0',
+        title: 'Ingestion And Preparation',
+        short: 'Prepare the pack and working materials without interpreting it yet.',
+        goal: 'Accept the drawing pack and prepare the base working materials.',
+        rule: 'Preparation only. This stage gets the pack ready but does not try to understand it yet.',
+        why: 'Creates the clean starting surface for the rest of the workflow.',
+        entry: 'Run start and source intake',
+        connection: 'Feeds Stage 1 with page assets and metadata',
+        kind: 'prep',
+        lane: 'early',
+        focus: ['core', 'poc'],
+        poc: true,
+        x: 70,
+        y: 120,
+        artifacts: ['writes: run manifest', 'writes: rendered pages', 'writes: preview atlas'],
+        refs: [
+          'LLM Pipeline Run Management Design.md',
+          'Sheet Classification and Extraction Pipeline.md',
+          'PDF Vector and OCR Extraction Pipeline.md',
+          'openai-model-calls.md'
+        ]
+      },
+      {
+        id: 'stage-1',
+        number: '1',
+        title: 'Whole-Pack Reconnaissance',
+        short: 'Run a broad first pass with GPT-5.5 vision.',
+        goal: 'Use GPT-5.5 vision to perform a first broad understanding pass over the pack.',
+        rule: 'Orientation, not deep extraction. This is the default first read of the pack.',
+        why: 'Creates the pack map that decides what deserves deeper reading.',
+        entry: 'Prepared previews and metadata available',
+        connection: 'Feeds Stage 2 with page atlas and open questions',
+        kind: 'read',
+        lane: 'early',
+        focus: ['core', 'poc'],
+        poc: true,
+        x: 330,
+        y: 120,
+        artifacts: ['reads: preview atlas', 'writes: page roles', 'writes: priority ranking'],
+        refs: [
+          'engineering-drawing-vision.md',
+          'openai_vision_skills/README.md',
+          'GPT-5.5 Structural Pack Interpretation JSON.md'
+        ]
+      },
+      {
+        id: 'stage-2',
+        number: '2',
+        title: 'Orchestrator Read-Plan Generation',
+        short: 'Turn reconnaissance into a reading strategy and task plan.',
+        goal: 'Turn the reconnaissance results into a concrete reading strategy.',
+        rule: 'Planning and routing only. This stage should not quietly become synthesis.',
+        why: 'Makes the orchestrator explicit about what it will ask, in what order, and why.',
+        entry: 'Reconnaissance summary exists',
+        connection: 'Routes Stage 3 and decides whether Stage 4 can be invoked',
+        kind: 'read',
+        lane: 'early',
+        focus: ['core', 'poc'],
+        poc: true,
+        x: 590,
+        y: 120,
+        artifacts: ['reads: page atlas', 'writes: typed read plan', 'writes: crop priorities'],
+        refs: [
+          'AI Drawing Interpretation Pipeline Architecture.md',
+          'Agentic Synthesis Protocol Design.md',
+          'openai-model-calls.md'
+        ]
+      },
+      {
+        id: 'stage-3',
+        number: '3',
+        title: 'Iterative Targeted Reading',
+        short: 'Run focused GPT-5.5 vision loops with follow-up reads as needed.',
+        goal: 'Read the relevant pages and regions in detail through orchestrated GPT-5.5 vision loops.',
+        rule: 'Iterative by design. One read can trigger a more focused read.',
+        why: 'Builds the evidence surface that later packaging and synthesis depend on.',
+        entry: 'Read plan and prompt family selected',
+        connection: 'Feeds Stage 5 directly and can trigger Stage 4 when help is needed',
+        kind: 'read',
+        lane: 'early',
+        focus: ['core', 'poc'],
+        poc: true,
+        x: 850,
+        y: 120,
+        artifacts: ['reads: sheet tasks', 'writes: observations', 'writes: follow-up requests'],
+        refs: [
+          'engineering-drawing-vision.md',
+          'Structural Plan Interpretation Research.md',
+          'Structural Elevation Resolution Research.md',
+          'Structural Drawing Reference Framework Research.md'
+        ]
+      },
+      {
+        id: 'stage-4',
+        number: '4',
+        title: 'Optional PDF-Native Support Extraction',
+        short: 'Use deterministic extraction selectively when it helps.',
+        goal: 'Provide structured supporting evidence when the orchestrator decides it will help.',
+        rule: 'Optional and subordinate. Useful support, but not a mandatory backbone stage.',
+        why: 'Lets you test deterministic help without letting it own the architecture.',
+        entry: 'Orchestrator flags a support question or ambiguity',
+        connection: 'Feeds Stage 5 as support evidence only',
+        kind: 'support',
+        lane: 'middle',
+        focus: ['poc'],
+        poc: true,
+        x: 850,
+        y: 390,
+        artifacts: ['reads: target regions', 'writes: support artifacts', 'writes: vector and text hints'],
+        refs: [
+          'Deterministic Evidence Bundle for Drawings.md',
+          'PDF Vector and OCR Extraction Pipeline.md',
+          'AI for Australian Steel Schedule Extraction.md'
+        ]
+      },
+      {
+        id: 'stage-5',
+        number: '5',
+        title: 'Coherent Observation Packaging',
+        short: 'Turn scattered findings into a structured observation package.',
+        goal: 'Transform fragmented findings into a coherent, indexed, evidence-linked observation package.',
+        rule: 'This is the AI observation package, not yet the final canonical model.',
+        why: 'Separates evidence organization from actual model creation.',
+        entry: 'Reading findings and optional support evidence exist',
+        connection: 'Feeds Stage 6 with grouped candidate objects, relations, and conflicts',
+        kind: 'synth',
+        lane: 'middle',
+        focus: ['core', 'poc', 'synthesis'],
+        poc: true,
+        x: 1120,
+        y: 390,
+        artifacts: ['reads: observations', 'reads: support evidence', 'writes: package manifest'],
+        refs: [
+          'AI Drawing Interpretation Pipeline Architecture.md',
+          'Agentic Synthesis Protocol Design.md',
+          'Uncertainty and Conflict Pipeline Model.md',
+          'Pipeline Object Identity and Naming.md'
+        ]
+      },
+      {
+        id: 'stage-6',
+        number: '6',
+        title: 'Neutral Model Synthesis',
+        short: 'Build the stable internal model from the observation package.',
+        goal: 'Consume the coherent observation package and build the stable internal model of the project.',
+        rule: 'This is the core internal model and should preserve ground-up spatial logic.',
+        why: 'Creates the stable bridge between interpretation and downstream review surfaces.',
+        entry: 'Observation package is coherent enough for identity and topology work',
+        connection: 'Feeds Stage 7 and becomes the source for scene generation',
+        kind: 'synth',
+        lane: 'middle',
+        focus: ['core', 'poc', 'synthesis'],
+        poc: true,
+        x: 1390,
+        y: 390,
+        artifacts: ['reads: observation package', 'writes: neutral model', 'writes: geometry maturity'],
+        refs: [
+          'Structural Graph Builder Research.md',
+          'Structural Plan Interpretation Research.md',
+          'Structural Elevation Resolution Research.md',
+          'Uncertainty and Conflict Pipeline Model.md'
+        ]
+      },
+      {
+        id: 'stage-7',
+        number: '7',
+        title: 'Verification',
+        short: 'Challenge the synthesized model with separate verification passes.',
+        goal: 'Challenge the synthesized model before presenting it as trustworthy.',
+        rule: 'Separate stage, not an afterthought. Verification should challenge rather than echo synthesis.',
+        why: 'Acts as the trust gate before browser review.',
+        entry: 'Neutral model slice is ready to be challenged',
+        connection: 'Feeds review surfaces and can trigger human steering',
+        kind: 'verify',
+        lane: 'middle',
+        focus: ['core', 'poc', 'review'],
+        poc: true,
+        x: 1390,
+        y: 660,
+        artifacts: ['reads: neutral model', 'writes: verification findings', 'writes: issue flags'],
+        refs: [
+          'Uncertainty and Conflict Pipeline Model.md',
+          'Deterministic Evidence Bundle for Drawings.md',
+          'Human Review Protocol for AI Extraction.md'
+        ]
+      },
+      {
+        id: 'stage-8',
+        number: '8',
+        title: 'Scene Graph Generation',
+        short: 'Generate a browser-facing interpretive scene graph.',
+        goal: 'Generate a browser-facing scene graph that displays what the AI believes exists in the project.',
+        rule: 'The scene graph is interpretive and can show schematic truth instead of hiding it.',
+        why: 'Makes the current model visible in a reviewable browser surface.',
+        entry: 'Verified model slice is ready to display',
+        connection: 'Feeds Stage 8A and Stage 10',
+        kind: 'review',
+        lane: 'late',
+        focus: ['core', 'poc', 'review'],
+        poc: true,
+        x: 1110,
+        y: 800,
+        artifacts: ['reads: neutral model', 'writes: scene graph data', 'writes: uncertainty markers'],
+        refs: [
+          'Scene Graph Contract for Browser Review.md',
+          'Structural Graph Builder Research.md',
+          'Uncertainty and Conflict Pipeline Model.md'
+        ]
+      },
+      {
+        id: 'stage-8a',
+        number: '8A',
+        title: 'Detailed Three.js Review Model',
+        short: 'Deepen the scene graph into a richer review surface.',
+        goal: 'Build a richer browser model once object identity and core geometry are understood well enough.',
+        rule: 'Still a review model, not BIM authoring.',
+        why: 'Improves inspectability before any export workflow is attempted.',
+        entry: 'Interpretive scene graph and enough geometry maturity exist',
+        connection: 'Feeds final review with richer geometry',
+        kind: 'review',
+        lane: 'late',
+        focus: ['review'],
+        poc: true,
+        x: 1380,
+        y: 800,
+        artifacts: ['reads: scene graph', 'writes: richer review geometry', 'writes: visual uncertainty cues'],
+        refs: [
+          'AI Structural Model Review Pipeline.md',
+          'Scene Graph Contract for Browser Review.md',
+          'Geometry Solver Research for Structural Drawings.md'
+        ]
+      },
+      {
+        id: 'stage-9',
+        number: '9',
+        title: 'Human Feedback During Interpretation',
+        short: 'Let a human steer understanding while the model is still being built.',
+        goal: 'Allow a human to influence the understanding process before the final model is locked in.',
+        rule: 'Structured steering loop, not loose chat drift.',
+        why: 'Gives the system a way to correct direction before final review.',
+        entry: 'Ambiguity, high tension, or critical project-specific priority appears',
+        connection: 'Can reroute planning, rereads, or packaging without resetting the whole run',
+        kind: 'human',
+        lane: 'late',
+        focus: ['poc', 'review'],
+        poc: true,
+        x: 520,
+        y: 800,
+        artifacts: ['reads: issue slice', 'writes: review action', 'writes: rerun intent'],
+        refs: [
+          'Human Review Protocol for AI Extraction.md',
+          'AI Drawing Interpretation Pipeline Architecture.md',
+          'LLM Pipeline Run Management Design.md'
+        ]
+      },
+      {
+        id: 'stage-10',
+        number: '10',
+        title: 'Human Review Of The Scene Graph',
+        short: 'Inspect and correct the interpreted model inside the browser review environment.',
+        goal: 'Allow final inspection and correction of the interpreted model inside the browser review environment.',
+        rule: 'Structured review actions should dominate over freeform chat.',
+        why: 'Creates the final trust boundary before later export workflows.',
+        entry: 'Scene graph or detailed review model is available for inspection',
+        connection: 'Can approve for export later or trigger targeted rereads and corrections',
+        kind: 'human',
+        lane: 'late',
+        focus: ['core', 'poc', 'review'],
+        poc: true,
+        x: 1380,
+        y: 930,
+        artifacts: ['reads: review model', 'writes: overrides', 'writes: review state'],
+        refs: [
+          'Human Review Protocol for AI Extraction.md',
+          'AI Structural Model Review Pipeline.md',
+          'Scene Graph Contract for Browser Review.md'
+        ]
+      },
+      {
+        id: 'stage-11',
+        number: '11',
+        title: 'Downstream Export Later',
+        short: 'Use the reviewed neutral model as the basis for later export workflows.',
+        goal: 'Use the reviewed neutral model as the basis for export-oriented workflows such as BIM or Revit family placement.',
+        rule: 'Export is downstream of the reviewed neutral model, not the first internal representation.',
+        why: 'Keeps export as a later consumer of the reviewed model instead of warping the architecture early.',
+        entry: 'Reviewed model state is approved for downstream use',
+        connection: 'Consumes approved model state only',
+        kind: 'export',
+        lane: 'late',
+        focus: ['core'],
+        poc: false,
+        x: 1110,
+        y: 930,
+        artifacts: ['reads: approved review state', 'writes: export handoff packages'],
+        refs: [
+          'Pipeline Object Identity and Naming.md',
+          'Structural Graph Builder Research.md',
+          'Scene Graph Contract for Browser Review.md'
+        ]
+      }
+    ];
+
+    const workflowEdges = [
+      { from: 'stage-0', to: 'stage-1', type: 'main', label: 'prepared pages' },
+      { from: 'stage-1', to: 'stage-2', type: 'main', label: 'recon summary' },
+      { from: 'stage-2', to: 'stage-3', type: 'main', label: 'typed read plan' },
+      { from: 'stage-3', to: 'stage-5', type: 'main', label: 'observations' },
+      { from: 'stage-3', to: 'stage-4', type: 'optional', label: 'needs support' },
+      { from: 'stage-4', to: 'stage-5', type: 'optional', label: 'support evidence' },
+      { from: 'stage-5', to: 'stage-6', type: 'main', label: 'package manifest' },
+      { from: 'stage-6', to: 'stage-7', type: 'main', label: 'neutral model slice' },
+      { from: 'stage-7', to: 'stage-8', type: 'main', label: 'verified display state' },
+      { from: 'stage-8', to: 'stage-8a', type: 'main', label: 'richer review geometry' },
+      { from: 'stage-8a', to: 'stage-10', type: 'main', label: 'inspection surface' },
+      { from: 'stage-10', to: 'stage-11', type: 'main', label: 'approved later export' },
+      { from: 'stage-2', to: 'stage-9', type: 'human', label: 'needs direction' },
+      { from: 'stage-7', to: 'stage-9', type: 'human', label: 'critical ambiguity' },
+      { from: 'stage-9', to: 'stage-2', type: 'human', label: 'reprioritize' },
+      { from: 'stage-9', to: 'stage-3', type: 'human', label: 'reread' },
+      { from: 'stage-9', to: 'stage-5', type: 'human', label: 'repackage' },
+      { from: 'stage-10', to: 'stage-3', type: 'human', label: 'request reread' },
+      { from: 'stage-10', to: 'stage-6', type: 'human', label: 'targeted correction' }
+    ];
+
+    const artifacts = [
+      {
+        id: 'artifact-0',
+        title: 'Run Backbone',
+        copy: 'Run manifest, source inventory, traceability, and page-preparation status.',
+        producers: ['stage-0'],
+        consumers: ['stage-1', 'stage-2'],
+        x: 110,
+        y: 110
+      },
+      {
+        id: 'artifact-1',
+        title: 'Pack Map',
+        copy: 'Page atlas, sheet-role hints, importance ranking, and unresolved questions.',
+        producers: ['stage-1'],
+        consumers: ['stage-2'],
+        x: 430,
+        y: 110
+      },
+      {
+        id: 'artifact-2',
+        title: 'Typed Read Plan',
+        copy: 'Prompt family, target sheets, crop priorities, escalation rules, and support intent.',
+        producers: ['stage-2'],
+        consumers: ['stage-3', 'stage-4', 'stage-9'],
+        x: 750,
+        y: 110
+      },
+      {
+        id: 'artifact-3',
+        title: 'Observation Stream',
+        copy: 'Per-sheet findings, region findings, direct observations, inferred notes, and follow-up requests.',
+        producers: ['stage-3'],
+        consumers: ['stage-5', 'stage-9'],
+        x: 1070,
+        y: 110
+      },
+      {
+        id: 'artifact-4',
+        title: 'Support Evidence',
+        copy: 'Text snippets, vector hints, dimension candidates, schedules, and deterministic region outputs.',
+        producers: ['stage-4'],
+        consumers: ['stage-5'],
+        x: 1390,
+        y: 110
+      },
+      {
+        id: 'artifact-5',
+        title: 'Coherent Observation Package',
+        copy: 'Grouped candidate objects, relationships, provenance, conflict records, and package manifest.',
+        producers: ['stage-5'],
+        consumers: ['stage-6', 'stage-7'],
+        x: 280,
+        y: 360
+      },
+      {
+        id: 'artifact-6',
+        title: 'Neutral Model',
+        copy: 'Stable identities, topology, geometry maturity, evidence links, and unresolved states.',
+        producers: ['stage-6'],
+        consumers: ['stage-7', 'stage-8', 'stage-10'],
+        x: 650,
+        y: 360
+      },
+      {
+        id: 'artifact-7',
+        title: 'Verification Queue',
+        copy: 'Issue flags, confidence adjustments, contradiction records, and targeted rerun recommendations.',
+        producers: ['stage-7'],
+        consumers: ['stage-8', 'stage-9', 'stage-10'],
+        x: 1020,
+        y: 360
+      },
+      {
+        id: 'artifact-8',
+        title: 'Browser Review State',
+        copy: 'Scene graph data, richer review geometry, uncertainty markers, and structured review targets.',
+        producers: ['stage-8', 'stage-8a'],
+        consumers: ['stage-10'],
+        x: 1390,
+        y: 360
+      },
+      {
+        id: 'artifact-9',
+        title: 'Human Steering Actions',
+        copy: 'Page-role corrections, reread requests, reprioritization signals, and override intent.',
+        producers: ['stage-9', 'stage-10'],
+        consumers: ['stage-2', 'stage-3', 'stage-5', 'stage-6'],
+        x: 520,
+        y: 620
+      },
+      {
+        id: 'artifact-10',
+        title: 'Reviewed Model State',
+        copy: 'Approved, rejected, corrected, and human-confirmed model state ready for later export work.',
+        producers: ['stage-10'],
+        consumers: ['stage-11'],
+        x: 980,
+        y: 620
+      }
+    ];
+
+    const artifactEdges = [
+      ['artifact-0', 'artifact-1'],
+      ['artifact-1', 'artifact-2'],
+      ['artifact-2', 'artifact-3'],
+      ['artifact-3', 'artifact-5'],
+      ['artifact-4', 'artifact-5'],
+      ['artifact-5', 'artifact-6'],
+      ['artifact-6', 'artifact-7'],
+      ['artifact-6', 'artifact-8'],
+      ['artifact-7', 'artifact-8'],
+      ['artifact-7', 'artifact-9'],
+      ['artifact-8', 'artifact-10'],
+      ['artifact-9', 'artifact-2'],
+      ['artifact-9', 'artifact-3'],
+      ['artifact-9', 'artifact-5'],
+      ['artifact-10', 'artifact-6']
+    ];
+
+    const stageById = Object.fromEntries(stages.map((stage) => [stage.id, stage]));
+    const artifactById = Object.fromEntries(artifacts.map((artifact) => [artifact.id, artifact]));
+
+    const workflowNodes = document.getElementById('workflowNodes');
+    const artifactNodes = document.getElementById('artifactNodes');
+    const workflowSvg = document.getElementById('workflowSvg');
+    const artifactSvg = document.getElementById('artifactSvg');
+    const stageLinks = document.getElementById('stageLinks');
+
+    const viewSelect = document.getElementById('viewSelect');
+    const focusSelect = document.getElementById('focusSelect');
+    const stageSearch = document.getElementById('stageSearch');
+    const toggleOptional = document.getElementById('toggleOptional');
+    const toggleHuman = document.getElementById('toggleHuman');
+    const toggleLabels = document.getElementById('toggleLabels');
+    const toggleInspectorBtn = document.getElementById('toggleInspectorBtn');
+    const boardWrap = document.getElementById('boardWrap');
+    const workflowBoard = document.getElementById('workflowBoard');
+    const artifactBoard = document.getElementById('artifactBoard');
+    const shell = document.querySelector('.shell');
+    const inspector = document.getElementById('inspector');
+    const closeInspectorBtn = document.getElementById('closeInspectorBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    const resetViewBtn = document.getElementById('resetViewBtn');
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const boardTitle = document.getElementById('boardTitle');
+    const boardCopy = document.getElementById('boardCopy');
+    const modeButtons = Array.from(document.querySelectorAll('.mode-pill'));
+
+    const inspectorNumber = document.getElementById('inspectorNumber');
+    const inspectorTitle = document.getElementById('inspectorTitle');
+    const inspectorKind = document.getElementById('inspectorKind');
+    const inspectorShort = document.getElementById('inspectorShort');
+    const inspectorEntry = document.getElementById('inspectorEntry');
+    const inspectorConnection = document.getElementById('inspectorConnection');
+    const inspectorGoal = document.getElementById('inspectorGoal');
+    const inspectorRule = document.getElementById('inspectorRule');
+    const inspectorArtifacts = document.getElementById('inspectorArtifacts');
+    const inspectorWhy = document.getElementById('inspectorWhy');
+    const inspectorConnections = document.getElementById('inspectorConnections');
+    const inspectorRefs = document.getElementById('inspectorRefs');
+
+    let currentStageId = 'stage-5';
+    let currentView = 'workflow';
+    let inspectorOpen = true;
+    const boardConfig = {
+      workflow: { element: workflowBoard, width: 1640, height: 1060 },
+      artifact: { element: artifactBoard, width: 1640, height: 840 }
+    };
+    const viewState = {
+      workflow: { scale: 1, x: 0, y: 0, fitted: false },
+      artifact: { scale: 1, x: 0, y: 0, fitted: false }
+    };
+    const panState = {
+      active: false,
+      pointerId: null,
+      startX: 0,
+      startY: 0,
+      originX: 0,
+      originY: 0
+    };
+    const SCALE_MIN = 0.35;
+    const SCALE_MAX = 1.9;
+    const SCALE_STEP = 0.12;
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function boardState(view = currentView) {
+      return viewState[view];
+    }
+
+    function boardElement(view = currentView) {
+      return boardConfig[view].element;
+    }
+
+    function applyBoardTransform(view = currentView) {
+      const state = boardState(view);
+      boardElement(view).style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+    }
+
+    function fitBoardToViewport(view = currentView) {
+      const rect = boardWrap.getBoundingClientRect();
+      const config = boardConfig[view];
+      const padding = 48;
+      const scale = clamp(
+        Math.min((rect.width - padding) / config.width, (rect.height - padding) / config.height, 1),
+        SCALE_MIN,
+        SCALE_MAX
+      );
+      const state = boardState(view);
+      state.scale = scale;
+      state.x = (rect.width - config.width * scale) / 2;
+      state.y = (rect.height - config.height * scale) / 2;
+      state.fitted = true;
+      applyBoardTransform(view);
+    }
+
+    function zoomAtPoint(nextScale, clientX, clientY, view = currentView) {
+      const state = boardState(view);
+      const rect = boardWrap.getBoundingClientRect();
+      const anchorX = clientX - rect.left;
+      const anchorY = clientY - rect.top;
+      const boardX = (anchorX - state.x) / state.scale;
+      const boardY = (anchorY - state.y) / state.scale;
+
+      state.scale = clamp(nextScale, SCALE_MIN, SCALE_MAX);
+      state.x = anchorX - boardX * state.scale;
+      state.y = anchorY - boardY * state.scale;
+      state.fitted = false;
+      applyBoardTransform(view);
+    }
+
+    function zoomFromCenter(delta) {
+      const rect = boardWrap.getBoundingClientRect();
+      const state = boardState();
+      zoomAtPoint(state.scale + delta, rect.left + rect.width / 2, rect.top + rect.height / 2);
+    }
+
+    function resetCurrentView() {
+      fitBoardToViewport(currentView);
+    }
+
+    function setInspectorOpen(isOpen) {
+      inspectorOpen = isOpen;
+      inspector.classList.toggle('is-hidden', !isOpen);
+      shell.classList.toggle('inspector-collapsed', !isOpen);
+      toggleInspectorBtn.textContent = isOpen ? 'Hide inspector' : 'Show inspector';
+      toggleInspectorBtn.classList.toggle('active', isOpen);
+      toggleInspectorBtn.setAttribute('aria-pressed', isOpen ? 'true' : 'false');
+      requestAnimationFrame(() => fitBoardToViewport(currentView));
+    }
+
+    function toggleInspector() {
+      setInspectorOpen(!inspectorOpen);
+    }
+
+    function kindLabel(kind) {
+      return {
+        prep: 'Preparation stage',
+        read: 'Reading and planning stage',
+        support: 'Optional support stage',
+        synth: 'Packaging and synthesis stage',
+        verify: 'Verification stage',
+        review: 'Browser review stage',
+        human: 'Human intervention stage',
+        export: 'Later export stage'
+      }[kind] || 'Stage';
+    }
+
+    function stageMatchesFocus(stage, focus) {
+      if (focus === 'all') {
+        return true;
+      }
+      if (focus === 'core') {
+        return ['stage-0', 'stage-1', 'stage-2', 'stage-3', 'stage-5', 'stage-6', 'stage-7', 'stage-8', 'stage-8a', 'stage-10', 'stage-11'].includes(stage.id);
+      }
+      if (focus === 'poc') {
+        return stage.poc;
+      }
+      if (focus === 'review') {
+        return ['stage-7', 'stage-8', 'stage-8a', 'stage-9', 'stage-10'].includes(stage.id);
+      }
+      if (focus === 'synthesis') {
+        return ['stage-3', 'stage-4', 'stage-5', 'stage-6', 'stage-7'].includes(stage.id);
+      }
+      return true;
+    }
+
+    function createStageNode(stage) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = `stage-node kind-${stage.kind}`;
+      button.dataset.stageId = stage.id;
+      button.style.left = `${stage.x}px`;
+      button.style.top = `${stage.y}px`;
+      button.innerHTML = `
+        <div class="node-head">
+          <div>
+            <div class="node-meta">Stage ${stage.number}</div>
+            <h3 class="node-title">${stage.title}</h3>
+          </div>
+          <span class="node-icon">${iconMap[stage.kind]}</span>
+        </div>
+        <p class="node-short">${stage.short}</p>
+        <div class="node-badges">
+          <span class="node-badge">${kindLabel(stage.kind).replace(' stage', '')}</span>
+          ${stage.id === 'stage-4' ? '<span class="node-badge">optional</span>' : ''}
+          ${stage.id === 'stage-5' || stage.id === 'stage-6' ? '<span class="node-badge">critical boundary</span>' : ''}
+        </div>
+      `;
+      button.addEventListener('click', () => selectStage(stage.id));
+      workflowNodes.appendChild(button);
+      return button;
+    }
+
+    function createStageLink(stage) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'stage-link';
+      button.dataset.stageId = stage.id;
+      button.innerHTML = `
+        <span class="stage-link-label">Stage ${stage.number}</span>
+        <strong>${stage.title}</strong>
+        <span class="muted">${stage.short}</span>
+      `;
+      button.addEventListener('click', () => selectStage(stage.id));
+      stageLinks.appendChild(button);
+      return button;
+    }
+
+    function createArtifactNode(artifact) {
+      const div = document.createElement('div');
+      div.className = 'artifact-node';
+      div.dataset.artifactId = artifact.id;
+      div.style.left = `${artifact.x}px`;
+      div.style.top = `${artifact.y}px`;
+      div.innerHTML = `
+        <div class="artifact-title">Artifact</div>
+        <h4>${artifact.title}</h4>
+        <p class="artifact-copy">${artifact.copy}</p>
+        <div>
+          <div class="node-meta" style="margin-bottom: 6px;">Produced or consumed by</div>
+          <div class="artifact-stage-list">${[...artifact.producers, ...artifact.consumers].map((stageId) => `<span class="artifact-stage">${stageById[stageId].number}</span>`).join('')}</div>
+        </div>
+      `;
+      artifactNodes.appendChild(div);
+      return div;
+    }
+
+    const stageElements = Object.fromEntries(stages.map((stage) => [stage.id, createStageNode(stage)]));
+    const stageLinkElements = Object.fromEntries(stages.map((stage) => [stage.id, createStageLink(stage)]));
+    const artifactElements = Object.fromEntries(artifacts.map((artifact) => [artifact.id, createArtifactNode(artifact)]));
+
+    function nodeBox(stageId) {
+      const element = stageElements[stageId];
+      return {
+        x: parseFloat(element.style.left),
+        y: parseFloat(element.style.top),
+        w: 220,
+        h: element.offsetHeight || 132
+      };
+    }
+
+    function artifactBox(artifactId) {
+      const element = artifactElements[artifactId];
+      return {
+        x: parseFloat(element.style.left),
+        y: parseFloat(element.style.top),
+        w: 250,
+        h: element.offsetHeight || 128
+      };
+    }
+
+    function anchorPoints(box, side) {
+      if (side === 'right') {
+        return { x: box.x + box.w, y: box.y + box.h / 2 };
+      }
+      if (side === 'left') {
+        return { x: box.x, y: box.y + box.h / 2 };
+      }
+      if (side === 'top') {
+        return { x: box.x + box.w / 2, y: box.y };
+      }
+      return { x: box.x + box.w / 2, y: box.y + box.h };
+    }
+
+    function preferredSides(fromBox, toBox) {
+      const dx = (toBox.x + toBox.w / 2) - (fromBox.x + fromBox.w / 2);
+      const dy = (toBox.y + toBox.h / 2) - (fromBox.y + fromBox.h / 2);
+      if (Math.abs(dx) > Math.abs(dy)) {
+        return dx >= 0 ? ['right', 'left'] : ['left', 'right'];
+      }
+      return dy >= 0 ? ['bottom', 'top'] : ['top', 'bottom'];
+    }
+
+    function curvePath(fromPoint, toPoint) {
+      const dx = toPoint.x - fromPoint.x;
+      const dy = toPoint.y - fromPoint.y;
+      const c1x = fromPoint.x + dx * 0.35;
+      const c1y = fromPoint.y;
+      const c2x = toPoint.x - dx * 0.35;
+      const c2y = toPoint.y;
+      if (Math.abs(dy) > Math.abs(dx)) {
+        return `M ${fromPoint.x} ${fromPoint.y} C ${fromPoint.x} ${fromPoint.y + dy * 0.35}, ${toPoint.x} ${toPoint.y - dy * 0.35}, ${toPoint.x} ${toPoint.y}`;
+      }
+      return `M ${fromPoint.x} ${fromPoint.y} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${toPoint.x} ${toPoint.y}`;
+    }
+
+    function midpoint(pathElement) {
+      const length = pathElement.getTotalLength();
+      return pathElement.getPointAtLength(length / 2);
+    }
+
+    function markerDef(svg, id, color) {
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      defs.innerHTML = `
+        <marker id="${id}" markerWidth="14" markerHeight="14" refX="10" refY="7" orient="auto" markerUnits="userSpaceOnUse">
+          <path d="M 0 0 L 10 7 L 0 14" fill="none" stroke="${color}" stroke-width="2.2"></path>
+        </marker>
+      `;
+      svg.appendChild(defs);
+    }
+
+    markerDef(workflowSvg, 'arrow-main', 'rgba(13, 95, 115, 0.9)');
+    markerDef(workflowSvg, 'arrow-optional', 'rgba(197, 106, 58, 0.95)');
+    markerDef(workflowSvg, 'arrow-human', 'rgba(126, 75, 68, 0.92)');
+    markerDef(artifactSvg, 'arrow-artifact', 'rgba(45, 109, 87, 0.92)');
+
+    function renderWorkflowEdges() {
+      workflowSvg.querySelectorAll('path, text').forEach((element) => element.remove());
+      const showLabels = toggleLabels.checked;
+      workflowEdges.forEach((edge) => {
+        if (edge.type === 'optional' && !toggleOptional.checked) {
+          return;
+        }
+        if (edge.type === 'human' && !toggleHuman.checked) {
+          return;
+        }
+        const fromBox = nodeBox(edge.from);
+        const toBox = nodeBox(edge.to);
+        const [fromSide, toSide] = preferredSides(fromBox, toBox);
+        const fromPoint = anchorPoints(fromBox, fromSide);
+        const toPoint = anchorPoints(toBox, toSide);
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', curvePath(fromPoint, toPoint));
+        path.setAttribute('class', `edge-path ${edge.type}`);
+        path.setAttribute('marker-end', `url(#arrow-${edge.type})`);
+        path.dataset.edgeType = edge.type;
+        path.dataset.from = edge.from;
+        path.dataset.to = edge.to;
+        workflowSvg.appendChild(path);
+
+        if (showLabels) {
+          const point = midpoint(path);
+          const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          label.textContent = edge.label;
+          label.setAttribute('x', point.x + 6);
+          label.setAttribute('y', point.y - 6);
+          label.setAttribute('class', 'edge-label');
+          label.dataset.edgeType = edge.type;
+          workflowSvg.appendChild(label);
+        }
+      });
+    }
+
+    function renderArtifactEdges() {
+      artifactSvg.querySelectorAll('path').forEach((element) => element.remove());
+      artifactEdges.forEach(([fromId, toId]) => {
+        const fromBox = artifactBox(fromId);
+        const toBox = artifactBox(toId);
+        const [fromSide, toSide] = preferredSides(fromBox, toBox);
+        const fromPoint = anchorPoints(fromBox, fromSide);
+        const toPoint = anchorPoints(toBox, toSide);
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', curvePath(fromPoint, toPoint));
+        path.setAttribute('class', 'edge-path artifact');
+        path.setAttribute('marker-end', 'url(#arrow-artifact)');
+        artifactSvg.appendChild(path);
+      });
+    }
+
+    function relatedConnections(stageId) {
+      return workflowEdges
+        .filter((edge) => edge.from === stageId || edge.to === stageId)
+        .map((edge) => {
+          const other = edge.from === stageId ? stageById[edge.to] : stageById[edge.from];
+          const direction = edge.from === stageId ? 'to' : 'from';
+          return `${edge.type}: ${direction} Stage ${other.number} ${other.title}`;
+        });
+    }
+
+    function updateInspector(stageId) {
+      const stage = stageById[stageId];
+      inspectorNumber.textContent = stage.number;
+      inspectorTitle.textContent = stage.title;
+      inspectorKind.textContent = kindLabel(stage.kind);
+      inspectorShort.textContent = stage.short;
+      inspectorEntry.textContent = stage.entry;
+      inspectorConnection.textContent = stage.connection;
+      inspectorGoal.textContent = stage.goal;
+      inspectorRule.textContent = stage.rule;
+      inspectorWhy.textContent = stage.why;
+
+      inspectorArtifacts.innerHTML = stage.artifacts
+        .map((artifact, index) => `<span class="detail-tag ${index === 0 ? 'primary' : index === 1 ? 'warm' : 'green'}">${artifact}</span>`)
+        .join('');
+
+      const connections = relatedConnections(stageId);
+      inspectorConnections.innerHTML = connections.length
+        ? connections.map((connection, index) => `<span class="detail-tag ${index % 3 === 0 ? 'primary' : index % 3 === 1 ? 'warm' : 'green'}">${connection}</span>`).join('')
+        : '<span class="detail-tag primary">No graph connections recorded</span>';
+
+      inspectorRefs.innerHTML = stage.refs.map((ref) => `<li>${ref}</li>`).join('');
+    }
+
+    function applyFilters() {
+      const searchTerm = stageSearch.value.trim().toLowerCase();
+      const focus = focusSelect.value;
+
+      stages.forEach((stage) => {
+        const matchesSearch = !searchTerm || `${stage.number} ${stage.title} ${stage.short}`.toLowerCase().includes(searchTerm);
+        const matchesFocus = stageMatchesFocus(stage, focus);
+        const visible = matchesSearch && matchesFocus;
+        stageElements[stage.id].classList.toggle('dimmed', !visible);
+        stageLinkElements[stage.id].classList.toggle('dimmed', !visible);
+      });
+
+      workflowSvg.querySelectorAll('path, text').forEach((element) => {
+        const from = element.dataset.from;
+        const to = element.dataset.to;
+        if (!from || !to) {
+          return;
+        }
+        const visible = !stageElements[from].classList.contains('dimmed') && !stageElements[to].classList.contains('dimmed');
+        element.style.opacity = visible ? '1' : '0.12';
+      });
+
+      artifacts.forEach((artifact) => {
+        const relatedVisible = [...artifact.producers, ...artifact.consumers].some((stageId) => !stageElements[stageId].classList.contains('dimmed'));
+        artifactElements[artifact.id].classList.toggle('dimmed', !relatedVisible);
+      });
+    }
+
+    function highlightArtifacts(stageId) {
+      artifacts.forEach((artifact) => {
+        const related = artifact.producers.includes(stageId) || artifact.consumers.includes(stageId);
+        artifactElements[artifact.id].classList.toggle('active', related && currentView === 'artifact');
+      });
+    }
+
+    function selectStage(stageId) {
+      currentStageId = stageId;
+      stages.forEach((stage) => {
+        stageElements[stage.id].classList.toggle('active', stage.id === stageId);
+        stageLinkElements[stage.id].classList.toggle('active', stage.id === stageId);
+      });
+      updateInspector(stageId);
+      highlightArtifacts(stageId);
+    }
+
+    function setView(view) {
+      currentView = view;
+      workflowBoard.classList.toggle('active', view === 'workflow');
+      artifactBoard.classList.toggle('active', view === 'artifact');
+      modeButtons.forEach((button) => button.classList.toggle('active', button.dataset.view === view));
+      viewSelect.value = view;
+
+      if (view === 'workflow') {
+        boardTitle.textContent = 'Workflow graph';
+        boardCopy.textContent = 'Core line, optional deterministic support, and human reroute surfaces.';
+      } else {
+        boardTitle.textContent = 'Artifact flow';
+        boardCopy.textContent = 'What each stage writes, what later stages consume, and where rerun state feeds back in.';
+      }
+
+      if (!boardState(view).fitted) {
+        fitBoardToViewport(view);
+      } else {
+        applyBoardTransform(view);
+      }
+
+      highlightArtifacts(currentStageId);
+    }
+
+    function beginPan(event) {
+      if (event.button !== 0) {
+        return;
+      }
+      if (event.target.closest('.stage-node, .artifact-node')) {
+        return;
+      }
+      panState.active = true;
+      panState.pointerId = event.pointerId;
+      panState.startX = event.clientX;
+      panState.startY = event.clientY;
+      panState.originX = boardState().x;
+      panState.originY = boardState().y;
+      boardWrap.classList.add('panning');
+      boardWrap.setPointerCapture(event.pointerId);
+    }
+
+    function movePan(event) {
+      if (!panState.active || panState.pointerId !== event.pointerId) {
+        return;
+      }
+      const state = boardState();
+      state.x = panState.originX + (event.clientX - panState.startX);
+      state.y = panState.originY + (event.clientY - panState.startY);
+      state.fitted = false;
+      applyBoardTransform();
+    }
+
+    function endPan(event) {
+      if (!panState.active || panState.pointerId !== event.pointerId) {
+        return;
+      }
+      panState.active = false;
+      panState.pointerId = null;
+      boardWrap.classList.remove('panning');
+      if (boardWrap.hasPointerCapture(event.pointerId)) {
+        boardWrap.releasePointerCapture(event.pointerId);
+      }
+    }
+
+    function handleWheelZoom(event) {
+      event.preventDefault();
+      const delta = event.deltaY < 0 ? SCALE_STEP : -SCALE_STEP;
+      zoomAtPoint(boardState().scale + delta, event.clientX, event.clientY);
+    }
+
+    function wireEvents() {
+      modeButtons.forEach((button) => {
+        button.addEventListener('click', () => setView(button.dataset.view));
+      });
+      viewSelect.addEventListener('change', (event) => setView(event.target.value));
+      focusSelect.addEventListener('change', applyFilters);
+      stageSearch.addEventListener('input', applyFilters);
+      toggleOptional.addEventListener('change', () => {
+        renderWorkflowEdges();
+        applyFilters();
+      });
+      toggleHuman.addEventListener('change', () => {
+        renderWorkflowEdges();
+        applyFilters();
+      });
+      toggleLabels.addEventListener('change', () => {
+        renderWorkflowEdges();
+        applyFilters();
+      });
+      toggleInspectorBtn.addEventListener('click', toggleInspector);
+      closeInspectorBtn.addEventListener('click', () => setInspectorOpen(false));
+      zoomOutBtn.addEventListener('click', () => zoomFromCenter(-SCALE_STEP));
+      zoomInBtn.addEventListener('click', () => zoomFromCenter(SCALE_STEP));
+      resetViewBtn.addEventListener('click', resetCurrentView);
+      boardWrap.addEventListener('pointerdown', beginPan);
+      boardWrap.addEventListener('pointermove', movePan);
+      boardWrap.addEventListener('pointerup', endPan);
+      boardWrap.addEventListener('pointercancel', endPan);
+      boardWrap.addEventListener('wheel', handleWheelZoom, { passive: false });
+      window.addEventListener('resize', () => fitBoardToViewport(currentView));
+    }
+
+    renderWorkflowEdges();
+    renderArtifactEdges();
+    wireEvents();
+    setView('workflow');
+    setInspectorOpen(true);
+    selectStage(currentStageId);
+    applyFilters();
+  </script>
+</body>
+</html>

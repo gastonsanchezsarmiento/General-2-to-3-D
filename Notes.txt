@@ -1,0 +1,35 @@
+Milestones:
+
+Critical Milestones
+(should align with implementation phases - not 1 to 1, but broadly speaking)
+ 
+
+--Interpretation
+1/ Initial Readthrough by GPT-5.5 Responses and it then has good understanding 
+and know broadly what is on each page and what the drawing pack if for. This 
+is shown in a UI.
+
+--What is it going to do
+2/ Then starting another sub-agent that reads drawings in detail. We stop here 
+and check that it has captured everything for some sample drawings. Pass if greater
+ than 95% accurate reading.
+
+--check on the retrieved pure data
+3/ What data did it return in the json? Here we try to understand the data 
+returned. Give it to other AI and ask it to explain back what it thinks is 
+in the json. Not strict pass/fail here as we cant think like an LLM. Hence 
+reason to have LLM read it and turn it back in to something that makes sense 
+to us.
+
+--How does it draw implementation
+4/ First attempt at the graph. Maybe check with the AI how this can be 
+verified by human. Is it via UI - does it essentially draw it? Or is it 
+searchable in that you can ask it to retrieve all the data on the footings 
+for example. Or is it just easier to jump over this - leap of faith - and 
+ask it to draw it which provides instant verification. ie go straight to 3JS. 
+
+--
+5/ 3JS drawing of the footings, columns, and beams. ie this will give us the 
+portal frames. We check this for accuracy. Probably ok to assume that the graph 
+was accurate if it does this step ok.
+

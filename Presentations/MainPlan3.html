@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MainPlan3 Overview</title>
+  <style>
+    :root {
+      --bg: #f3efe7;
+      --bg-strong: #e5dbcc;
+      --panel: rgba(255, 250, 241, 0.92);
+      --panel-strong: #fffaf0;
+      --text: #1d2a31;
+      --muted: #5c6b73;
+      --line: rgba(29, 42, 49, 0.12);
+      --accent: #0f5f73;
+      --accent-strong: #083f4d;
+      --accent-soft: rgba(15, 95, 115, 0.12);
+      --highlight: #cc6f3c;
+      --shadow: 0 18px 50px rgba(23, 30, 34, 0.12);
+      --radius-lg: 28px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --max: 1440px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Aptos", "Segoe UI Variable Text", "Segoe UI", "Helvetica Neue", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(204, 111, 60, 0.12), transparent 32%),
+        radial-gradient(circle at top right, rgba(15, 95, 115, 0.18), transparent 28%),
+        linear-gradient(180deg, #f7f2e9 0%, #efe7da 56%, #ece3d8 100%);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(29, 42, 49, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(29, 42, 49, 0.025) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.15));
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .shell {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 24px auto 40px;
+      display: grid;
+      grid-template-columns: 290px minmax(0, 1fr);
+      gap: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      background: rgba(255, 249, 239, 0.86);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 24px 20px;
+    }
+
+    .sidebar h1 {
+      margin: 0;
+      font-size: 1.7rem;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .sidebar p {
+      margin: 10px 0 18px;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 0.95rem;
+    }
+
+    .chip-row,
+    .hero-tags,
+    .stage-tags,
+    .modal-tags,
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip,
+    .tag,
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      letter-spacing: 0.01em;
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      border: 1px solid rgba(15, 95, 115, 0.12);
+    }
+
+    .nav-group {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .nav-label {
+      margin: 0 0 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .nav-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav-link {
+      padding: 10px 12px;
+      border-radius: 12px;
+      color: var(--text);
+      background: transparent;
+      transition: background 160ms ease, transform 160ms ease;
+      font-size: 0.95rem;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible {
+      background: rgba(15, 95, 115, 0.09);
+      transform: translateX(3px);
+      outline: none;
+    }
+
+    .content {
+      display: grid;
+      gap: 18px;
+    }
+
+    .panel {
+      background: var(--panel);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 34px;
+      background: linear-gradient(180deg, rgba(255, 250, 240, 0.96), rgba(248, 244, 238, 0.92));
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.72rem;
+      color: var(--highlight);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .hero h2 {
+      margin: 0;
+      font-size: clamp(2.1rem, 3.5vw, 3.5rem);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      max-width: 12ch;
+    }
+
+    .hero-copy p {
+      margin: 16px 0 0;
+      font-size: 1rem;
+      line-height: 1.7;
+      max-width: 66ch;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 11px 16px;
+      font: inherit;
+      font-size: 0.93rem;
+      cursor: pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease, border-color 160ms ease;
+    }
+
+    .btn:hover,
+    .btn:focus-visible {
+      transform: translateY(-1px);
+      outline: none;
+      box-shadow: 0 12px 24px rgba(15, 95, 115, 0.12);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.62);
+      border-color: rgba(15, 95, 115, 0.14);
+      color: var(--accent-strong);
+    }
+
+    .hero-card h3,
+    .section-header h3,
+    .section-header h2 {
+      margin: 0;
+      letter-spacing: -0.03em;
+    }
+
+    .list,
+    .modal-body ul {
+      margin: 0;
+      padding-left: 18px;
+      line-height: 1.65;
+    }
+
+    .list li + li,
+    .modal-body li + li {
+      margin-top: 8px;
+    }
+
+    .section {
+      padding: 28px 30px 30px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 20px;
+    }
+
+    .section-header p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+      max-width: 70ch;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .mini-card,
+    .part-card,
+    .artifact-card,
+    .summary-card {
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .priority-card {
+      background: linear-gradient(180deg, rgba(15, 95, 115, 0.12), rgba(255, 250, 240, 0.98));
+      border-color: rgba(15, 95, 115, 0.22);
+      box-shadow: inset 0 0 0 1px rgba(15, 95, 115, 0.04);
+    }
+
+    .priority-card h4 {
+      color: var(--accent-strong);
+    }
+
+    .mini-card h4,
+    .part-card h4,
+    .artifact-card h4,
+    .summary-card h4,
+    .stage-summary h3,
+    .modal-body h4 {
+      margin: 0 0 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .mini-card p,
+    .part-card p,
+    .artifact-card p,
+    .summary-card p,
+    .stage-summary p,
+    .metric-card p,
+    .search-box p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .parts-grid,
+    .artifact-grid,
+    .summary-grid,
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .metrics-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .metric-card {
+      background: linear-gradient(180deg, rgba(15, 95, 115, 0.09), rgba(255, 250, 240, 0.9));
+      border: 1px solid rgba(15, 95, 115, 0.1);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .metric-value {
+      display: block;
+      font-size: 2rem;
+      line-height: 1;
+      margin-bottom: 8px;
+      color: var(--accent-strong);
+      letter-spacing: -0.05em;
+    }
+
+    .search-shell {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .search-box {
+      padding: 16px 18px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(255, 250, 240, 0.92), rgba(248, 244, 238, 0.9));
+      border: 1px solid var(--line);
+    }
+
+    .search-box label {
+      display: block;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .search-box input {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-size: 1.08rem;
+    }
+
+    .search-box input:focus {
+      outline: none;
+    }
+
+    .stage-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .stage-card {
+      background: rgba(255, 250, 241, 0.94);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      overflow: hidden;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+    }
+
+    .stage-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 32px rgba(24, 34, 40, 0.08);
+      border-color: rgba(15, 95, 115, 0.18);
+    }
+
+    .stage-card[hidden] {
+      display: none;
+    }
+
+    .stage-details {
+      width: 100%;
+    }
+
+    .stage-details summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 20px 22px;
+    }
+
+    .stage-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .stage-summary {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .stage-number {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, rgba(15, 95, 115, 0.13), rgba(15, 95, 115, 0.04));
+      border: 1px solid rgba(15, 95, 115, 0.14);
+      color: var(--accent-strong);
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    .stage-title-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .stage-arrow {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      color: var(--accent-strong);
+      transition: transform 160ms ease;
+      font-size: 1rem;
+      margin-top: 4px;
+    }
+
+    .stage-details[open] .stage-arrow {
+      transform: rotate(180deg);
+    }
+
+    .stage-body {
+      padding: 0 22px 22px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .stage-columns {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(250px, 0.7fr);
+      gap: 16px;
+    }
+
+    .stage-panel {
+      background: rgba(248, 243, 235, 0.74);
+      border: 1px solid rgba(29, 42, 49, 0.08);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .resource-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .resource-item {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(29, 42, 49, 0.08);
+    }
+
+    .resource-file {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--accent-strong);
+    }
+
+    .stage-panel h4 {
+      margin: 0 0 10px;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-strong);
+    }
+
+    .stage-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .link-btn {
+      border: 1px solid rgba(15, 95, 115, 0.15);
+      background: #fff;
+      color: var(--accent-strong);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 66px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .timeline-item:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .timeline-step {
+      font-size: 0.85rem;
+      color: var(--highlight);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding-top: 4px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 24, 28, 0.58);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 20;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      width: min(960px, 100%);
+      max-height: min(88vh, 900px);
+      overflow: auto;
+      background: #fffaf2;
+      border-radius: 28px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .modal-head {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: rgba(255, 250, 242, 0.95);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+      padding: 24px 26px 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .modal-head h3 {
+      margin: 10px 0 0;
+      font-size: 2rem;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .modal-close {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--accent-strong);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    .modal-body {
+      padding: 24px 26px 30px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .modal-block {
+      background: #fffdf9;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .modal-block.full {
+      grid-column: 1 / -1;
+    }
+
+    .footer-note {
+      padding: 20px 24px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 1120px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .hero-grid,
+      .stage-columns,
+      .search-shell,
+      .modal-grid,
+      .metrics-grid,
+      .card-grid,
+      .parts-grid,
+      .artifact-grid,
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: min(calc(100% - 18px), var(--max));
+        margin-top: 10px;
+      }
+
+      .hero,
+      .section,
+      .sidebar,
+      .modal-head,
+      .modal-body {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .stage-details summary,
+      .stage-body {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .stage-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .stage-arrow {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <h1>MainPlan3</h1>
+      <p>Execution view for the meeting: layers, artifacts, workflow stages, and the key rules for implementation.</p>
+      <div class="chip-row">
+        <span class="chip">GPT-5.5 orchestrator</span>
+        <span class="chip">Vision default first read</span>
+        <span class="chip">Artifact-backed workflow</span>
+      </div>
+
+      <div class="nav-group">
+        <p class="nav-label">Overview</p>
+        <nav class="nav-list">
+          <a class="nav-link" href="#hero">Execution summary</a>
+          <a class="nav-link" href="#principles">Execution rules</a>
+          <a class="nav-link" href="#parts">System parts</a>
+          <a class="nav-link" href="#artifacts">Memory and artifacts</a>
+          <a class="nav-link" href="#summary">Workflow summary</a>
+        </nav>
+      </div>
+
+      <div class="nav-group">
+        <p class="nav-label">Workflow Stages</p>
+        <nav class="nav-list" id="stageNav"></nav>
+      </div>
+    </aside>
+
+    <main class="content">
+      <section class="panel hero" id="hero">
+        <p class="eyebrow">Execution Summary</p>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <div class="hero-tags">
+              <span class="tag">MainPlan3</span>
+              <span class="tag">Execution view</span>
+              <span class="tag">Interactive stages</span>
+            </div>
+            <h2>How the workflow is executed.</h2>
+            <p>GPT-5.5 orchestrates the workflow. The default read path is GPT-5.5 vision first, then optional PDF-native support only when the vision-led pass needs help. Outputs move through artifacts into observation packaging, neutral-model synthesis, verification, review, and later export.</p>
+            <div class="hero-actions">
+              <button class="btn btn-primary" id="expandAllBtn" type="button">Expand all stages</button>
+              <button class="btn btn-secondary" id="collapseAllBtn" type="button">Collapse all stages</button>
+              <a class="btn btn-secondary" href="#stages">Jump to stages</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="metrics-grid">
+          <article class="metric-card">
+            <span class="metric-value">12</span>
+            <p>workflow stages from ingestion to later export</p>
+          </article>
+          <article class="metric-card">
+            <span class="metric-value">5</span>
+            <p>major cooperating system layers</p>
+          </article>
+          <article class="metric-card">
+            <span class="metric-value">2</span>
+            <p>human feedback loops in the workflow</p>
+          </article>
+          <article class="metric-card">
+            <span class="metric-value">3</span>
+            <p>downstream output levels from scene graph to later BIM export</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" id="principles">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Execution Rules</p>
+            <h2>Rules that shape implementation</h2>
+            <p>These are the rules that determine how the workflow should be applied.</p>
+          </div>
+        </div>
+        <div class="card-grid">
+          <article class="mini-card priority-card">
+            <h4>Vision is the default first read</h4>
+            <p>Start with GPT-5.5 vision by default. Use deterministic PDF-native extraction as support only when the vision-led read leaves a gap or needs confirmation.</p>
+          </article>
+          <article class="mini-card">
+            <h4>General architecture</h4>
+            <p>Keep the architecture general enough for structural and technical drawing packs.</p>
+          </article>
+          <article class="mini-card">
+            <h4>Multimodal PDFs</h4>
+            <p>The orchestrator chooses among imagery, vectors, text, schedules, dimensions, symbols, and cross-sheet references per task.</p>
+          </article>
+          <article class="mini-card">
+            <h4>Vision as default read</h4>
+            <p>Every reading plan should assume a vision-first pass unless there is a concrete reason to bypass it.</p>
+          </article>
+          <article class="mini-card">
+            <h4>Effectiveness first</h4>
+            <p>Optimize for correctness, inspectability, and workflow robustness before cost tuning.</p>
+          </article>
+          <article class="mini-card">
+            <h4>Plan-upward reasoning</h4>
+            <p>Start from the lowest reliable plan-level manifestation, then resolve vertical and dependent structure.</p>
+          </article>
+          <article class="mini-card">
+            <h4>Artifact-backed agents</h4>
+            <p>Agents communicate through project memory, typed artifacts, and retrieved context rather than one shared context window.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" id="parts">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Major System Parts</p>
+            <h2>Five cooperating layers</h2>
+            <p>Each layer has a distinct job in execution.</p>
+          </div>
+        </div>
+        <div class="parts-grid">
+          <article class="part-card">
+            <h4>Orchestration layer</h4>
+            <p>The GPT-5.5 master orchestrator manages workflow, artifacts, follow-up actions, support-tool invocation, synthesis, verification, and review routing.</p>
+          </article>
+          <article class="part-card">
+            <h4>Reading layer</h4>
+            <p>Whole-pack, targeted sheet, crop, schedule, detail, and verification readers operate under orchestrator control, with GPT-5.5 vision as the default reading surface.</p>
+          </article>
+          <article class="part-card">
+            <h4>Support extraction layer</h4>
+            <p>Optional PDF-native helpers recover text, vectors, schedules, dimensions, title blocks, and structural regions when the default vision-led pass needs structured support.</p>
+          </article>
+          <article class="part-card">
+            <h4>Synthesis layer</h4>
+            <p>Converts gathered findings into a neutral internal model of objects, relationships, geometry maturity, and supporting evidence.</p>
+          </article>
+          <article class="part-card">
+            <h4>Review and output layer</h4>
+            <p>Provides scene graph review, evidence inspection, uncertainty display, issue tracking, overrides, and later export preparation.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" id="artifacts">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Shared Memory And Artifact Space</p>
+            <h2>How agents communicate</h2>
+            <p>The workflow should be auditable, rerunnable, and not dependent on hidden chat state.</p>
+          </div>
+        </div>
+        <div class="artifact-grid">
+          <article class="artifact-card">
+            <h4>Typical artifacts</h4>
+            <ul class="list">
+              <li>project manifest</li>
+              <li>page atlas</li>
+              <li>reading instructions</li>
+              <li>page and region findings</li>
+              <li>support extraction artifacts</li>
+              <li>conflict and unresolved logs</li>
+            </ul>
+          </article>
+          <article class="artifact-card">
+            <h4>Later-stage artifacts</h4>
+            <ul class="list">
+              <li>interpretation package</li>
+              <li>neutral model drafts</li>
+              <li>verification reports</li>
+              <li>scene graph data</li>
+              <li>human review actions</li>
+              <li>reviewed model state</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel section" id="stages">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">High-Level Workflow</p>
+            <h2>Stages</h2>
+            <p>Use search to jump quickly. Each stage opens as a dropdown and has a detail view.</p>
+          </div>
+        </div>
+
+        <div class="search-shell">
+          <div class="search-box">
+            <label for="stageSearch">Find a stage or keyword</label>
+            <input id="stageSearch" type="search" placeholder="Try: verification, scene graph, support extraction, human review">
+          </div>
+          <div class="tag-list">
+            <span class="pill">Dropdowns</span>
+            <span class="pill">Quick search</span>
+            <span class="pill">Detail modal</span>
+          </div>
+        </div>
+
+        <div class="stage-list" id="stageList"></div>
+      </section>
+
+      <section class="panel section" id="summary">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Workflow Summary</p>
+            <h2>Execution summary</h2>
+            <p>Compact version of the workflow from ingestion to later export.</p>
+          </div>
+        </div>
+
+        <div class="summary-grid">
+          <article class="summary-card">
+            <h4>Start with vision</h4>
+            <p>Ingest the pack, prepare pages and metadata, then run a broad GPT-5.5 vision reconnaissance pass as the default first read.</p>
+          </article>
+          <article class="summary-card">
+            <h4>Plan and read</h4>
+            <p>The orchestrator decides how the pack should be read and launches iterative targeted reads on important sheets and regions.</p>
+          </article>
+          <article class="summary-card">
+            <h4>Support only when useful</h4>
+            <p>PDF-native extraction can be invoked to help with schedules, text, vectors, dimensions, and metadata, but it is not the backbone.</p>
+          </article>
+          <article class="summary-card">
+            <h4>Build understanding in two steps</h4>
+            <p>First package findings into a coherent observation layer, then synthesize a ground-up neutral model of objects, relationships, geometry, and evidence.</p>
+          </article>
+          <article class="summary-card">
+            <h4>Challenge and display</h4>
+            <p>Run dedicated verification passes, then generate a scene graph and richer review model for browser-based inspection.</p>
+          </article>
+          <article class="summary-card">
+            <h4>Review then export later</h4>
+            <p>Human feedback happens during interpretation and at final review. Only later does the reviewed neutral model become the basis for BIM or Revit-oriented export.</p>
+          </article>
+        </div>
+
+        <div class="timeline" style="margin-top: 18px;">
+          <article class="timeline-item">
+            <div class="timeline-step">Core line</div>
+            <div>
+              <h4>GPT-5.5 orchestrates the interpretation of the drawing pack.</h4>
+              <p>The orchestrator starts with GPT-5.5 vision as the default first read, consults PDF-native extraction only when useful, builds a shared artifact-backed understanding of the project, and turns that understanding into a reviewable structural model.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <div class="footer-note panel">Open locally in the browser and use the sidebar, search, and stage detail views during the meeting.</div>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="stageModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <div>
+          <div class="modal-tags" id="modalTags"></div>
+          <h3 id="modalTitle">Stage details</h3>
+        </div>
+        <button class="modal-close" id="closeModalBtn" type="button" aria-label="Close details">×</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    const stages = [
+      {
+        id: "stage-0",
+        nav: "Stage 0",
+        number: "0",
+        title: "Ingestion And Preparation",
+        short: "Prepare the pack and working materials without interpreting it yet.",
+        goal: "Accept the drawing pack and prepare the base working materials.",
+        purpose: [
+          "Create the starting asset set for the rest of the workflow.",
+          "Capture source files, page renders, previews, metadata, and optional text/vector availability.",
+          "Keep this stage non-interpretive so later reasoning starts from clean preparation artifacts."
+        ],
+        outputs: [
+          "original source files",
+          "rendered page images",
+          "low-resolution previews",
+          "page metadata",
+          "optional text-layer access",
+          "optional vector availability summary"
+        ],
+        rule: "Preparation only. This stage gets the pack ready but does not try to understand it yet.",
+        why: "Creates the clean starting surface for the rest of the workflow.",
+        resources: [
+          { file: "LLM Pipeline Run Management Design.md", use: "run container, lineage, and auditability" },
+          { file: "Sheet Classification and Extraction Pipeline.md", use: "title blocks, labels, and early page-role hints" },
+          { file: "PDF Vector and OCR Extraction Pipeline.md", use: "page imagery, text-layer, and vector preparation" },
+          { file: "openai-model-calls.md", use: "prompt versioning and run traceability" }
+        ]
+      },
+      {
+        id: "stage-1",
+        nav: "Stage 1",
+        number: "1",
+        title: "Whole-Pack Reconnaissance",
+        short: "Run a broad first pass with GPT-5.5 vision.",
+        goal: "Use GPT-5.5 vision to perform a first broad understanding pass over the pack.",
+        purpose: [
+          "Orient the system before deep extraction starts.",
+          "Identify likely project type, major sheet families, important sheets, likely object families, and visible uncertainty.",
+          "Produce an early pack-level map rather than detailed structural truth."
+        ],
+        outputs: [
+          "pack reconnaissance summary",
+          "page atlas",
+          "initial page roles",
+          "initial importance ranking",
+          "early unresolved questions"
+        ],
+        rule: "Orientation, not deep extraction. This is the default first read of the pack.",
+        why: "Sets the map for what should be read in detail next and establishes the vision-led starting point.",
+        resources: [
+          { file: "engineering-drawing-vision.md", use: "broad sheet read plus targeted crop discipline" },
+          { file: "openai_vision_skills/README.md", use: "why engineering drawings need a distinct reading method" },
+          { file: "GPT-5.5 Structural Pack Interpretation JSON.md", use: "what the first pack-level output should contain" },
+          { file: "Sheet Classification and Extraction Pipeline.md", use: "likely plan, elevation, schedule, and detail sheet hints" }
+        ]
+      },
+      {
+        id: "stage-2",
+        nav: "Stage 2",
+        number: "2",
+        title: "Orchestrator Read-Plan Generation",
+        short: "Turn reconnaissance into a reading strategy and task plan.",
+        goal: "Turn the reconnaissance results into a concrete reading strategy.",
+        purpose: [
+          "Decide what the project probably is and what information must be collected.",
+          "Choose anchor plan sheets first, then follow with elevations, sections, details, schedules, and higher-level geometric relationships.",
+          "Select prompt families, support-tool use, inference boundaries, and escalation rules."
+        ],
+        outputs: [
+          "reading plan",
+          "per-sheet instructions",
+          "crop priorities",
+          "support-tool requests where needed",
+          "initial schema intent and collection goals"
+        ],
+        rule: "Planning and routing only. The orchestrator decides how the work should be done after the default vision pass.",
+        why: "Defines how the orchestrator will route the next work after the initial vision-led reconnaissance.",
+        resources: [
+          { file: "AI Drawing Interpretation Pipeline Architecture.md", use: "stage ownership and artifact routing" },
+          { file: "Agentic Synthesis Protocol Design.md", use: "turn questions into targeted read tasks" },
+          { file: "GPT-5.5 Structural Pack Interpretation JSON.md", use: "minimum fields the read-plan consumes" },
+          { file: "LLM Pipeline Run Management Design.md", use: "traceable task planning and rerun control" },
+          { file: "openai-model-calls.md", use: "prompt family and structured-output discipline" }
+        ]
+      },
+      {
+        id: "stage-3",
+        nav: "Stage 3",
+        number: "3",
+        title: "Iterative Targeted Reading",
+        short: "Run focused GPT-5.5 vision loops with follow-up reads as needed.",
+        goal: "Read the relevant pages and regions in detail through orchestrated GPT-5.5 vision loops.",
+        purpose: [
+          "Read plans, elevations, schedules, and details with targeted tasks.",
+          "Allow one read to trigger a more focused follow-up read.",
+          "Produce evidence-linked observations rather than only freeform notes."
+        ],
+        outputs: [
+          "per-sheet findings",
+          "region findings",
+          "object candidates",
+          "relationship candidates",
+          "direct-read observations",
+          "inferred observations",
+          "unresolved notes",
+          "follow-up requests"
+        ],
+        rule: "Iterative by design. The orchestrator can learn from one vision pass and request another.",
+        why: "Builds the evidence surface used by later packaging and synthesis stages, still led by targeted vision reads.",
+        resources: [
+          { file: "engineering-drawing-vision.md", use: "whole-page plus crop read loop and evidence discipline" },
+          { file: "Structural Plan Interpretation Research.md", use: "plan-grounded object and topology reading" },
+          { file: "Structural Elevation Resolution Research.md", use: "vertical logic, frame templates, roof pitch" },
+          { file: "Structural Drawing Reference Framework Research.md", use: "grids, levels, and spatial alignment" },
+          { file: "AI for Australian Steel Schedule Extraction.md", use: "schedule and mark reading patterns" }
+        ]
+      },
+      {
+        id: "stage-4",
+        nav: "Stage 4",
+        number: "4",
+        title: "Optional PDF-Native Support Extraction",
+        short: "Use deterministic extraction selectively when it helps.",
+        goal: "Provide structured supporting evidence when the orchestrator decides it will help.",
+        purpose: [
+          "Support schedules, title blocks, text layers, vector geometry, dimensions, repeated marks, and clean region parsing.",
+          "Expose structured support artifacts under orchestrator control.",
+          "Keep the support path configurable, down-weightable, or fully disabled."
+        ],
+        outputs: [
+          "support artifacts",
+          "extracted schedule candidates",
+          "text-layer snippets",
+          "vector hints",
+          "dimension candidates",
+          "metadata enrichments"
+        ],
+        rule: "Optional and subordinate. Useful support, but not a mandatory backbone stage. Invoke it only when the vision-led path needs help.",
+        why: "Adds structured support evidence without taking over the default vision-first workflow.",
+        resources: [
+          { file: "Deterministic Evidence Bundle for Drawings.md", use: "defines the support artifact contract" },
+          { file: "PDF Vector and OCR Extraction Pipeline.md", use: "vector-first parsing plus OCR fallback" },
+          { file: "Sheet Classification and Extraction Pipeline.md", use: "route extraction to the right regions" },
+          { file: "AI for Australian Steel Schedule Extraction.md", use: "table and schedule extraction structure" },
+          { file: "Structural Drawing Reference Framework Research.md", use: "grids, levels, and dimension-heavy support data" }
+        ]
+      },
+      {
+        id: "stage-5",
+        nav: "Stage 5",
+        number: "5",
+        title: "Coherent Observation Packaging",
+        short: "Turn scattered findings into a structured observation package.",
+        goal: "Transform fragmented findings into a coherent, indexed, evidence-linked observation package that is stable enough for synthesis and deterministic enough for software to consume.",
+        purpose: [
+          "Collect outputs from Stage 3 and Stage 4 and normalize them into a stable observation language.",
+          "Group related findings without over-resolving too early.",
+          "Preserve provenance, confidence, conflict, and unresolved states."
+        ],
+        outputs: [
+          "pack understanding",
+          "page roles",
+          "evidence references",
+          "structured observations",
+          "grouped candidate objects",
+          "grouped candidate relationships",
+          "conflict records",
+          "package manifest and indexes"
+        ],
+        rule: "This is the AI’s coherent observation package, not yet the final canonical model.",
+        why: "Separates observation packaging from model synthesis.",
+        resources: [
+          { file: "AI Drawing Interpretation Pipeline Architecture.md", use: "artifact graph and validation mindset" },
+          { file: "Agentic Synthesis Protocol Design.md", use: "observation commits and targeted retrieval" },
+          { file: "Deterministic Evidence Bundle for Drawings.md", use: "provenance and evidence structure" },
+          { file: "Uncertainty and Conflict Pipeline Model.md", use: "preserve conflict and unresolved state" },
+          { file: "Pipeline Object Identity and Naming.md", use: "stable candidate identities before final resolution" }
+        ]
+      },
+      {
+        id: "stage-6",
+        nav: "Stage 6",
+        number: "6",
+        title: "Neutral Model Synthesis",
+        short: "Build the stable internal model from the observation package.",
+        goal: "Consume the coherent observation package and build the stable internal model of the project.",
+        purpose: [
+          "Resolve candidate object and relationship groups into internal identities and topology.",
+          "Represent what exists, what connects, what is known geometrically, and what remains approximate or unresolved.",
+          "Keep the model independent from Three.js, Revit, or any single output target."
+        ],
+        outputs: [
+          "stable neutral model",
+          "object identities",
+          "topology",
+          "geometry maturity assignments",
+          "explicit evidence links",
+          "conflict and uncertainty state"
+        ],
+        rule: "This is the core internal model and should preserve ground-up spatial logic.",
+        why: "Creates the core model used by downstream outputs and review.",
+        resources: [
+          { file: "Structural Graph Builder Research.md", use: "symbolic graph construction and merge logic" },
+          { file: "Structural Plan Interpretation Research.md", use: "plan-grounded topology and object families" },
+          { file: "Structural Elevation Resolution Research.md", use: "vertical structure and frame resolution" },
+          { file: "Structural Drawing Reference Framework Research.md", use: "coordinate and datum framework" },
+          { file: "Uncertainty and Conflict Pipeline Model.md", use: "alternatives and unresolved-state handling" }
+        ]
+      },
+      {
+        id: "stage-7",
+        nav: "Stage 7",
+        number: "7",
+        title: "Verification",
+        short: "Challenge the synthesized model with separate verification passes.",
+        goal: "Challenge the synthesized model before presenting it as trustworthy.",
+        purpose: [
+          "Check whether evidence actually supports claims.",
+          "Check cross-sheet consistency, schedule alignment, geometry plausibility, and topology coherence.",
+          "Produce structured findings for review or orchestrator follow-up."
+        ],
+        outputs: [
+          "verification findings",
+          "confidence adjustments",
+          "issue flags",
+          "conflicts requiring review",
+          "review queue items"
+        ],
+        rule: "Separate stage, not an afterthought. The same agent that built the model should not be the only judge of correctness.",
+        why: "Acts as the trust gate before visualization and review.",
+        resources: [
+          { file: "Uncertainty and Conflict Pipeline Model.md", use: "challenge passes, tension scoring, unresolved-state taxonomy" },
+          { file: "Deterministic Evidence Bundle for Drawings.md", use: "trace each claim back to evidence" },
+          { file: "Human Review Protocol for AI Extraction.md", use: "issue objects and rerun boundaries" },
+          { file: "Structural Graph Builder Research.md", use: "topology and evidence propagation checks" },
+          { file: "LLM Pipeline Run Management Design.md", use: "structured rerun queues" }
+        ]
+      },
+      {
+        id: "stage-8",
+        nav: "Stage 8",
+        number: "8",
+        title: "Scene Graph Generation",
+        short: "Generate a browser-facing interpretive scene graph.",
+        goal: "Generate a browser-facing scene graph that displays what the AI believes exists in the project.",
+        purpose: [
+          "Show objects, classes, approximate or exact geometry, connectivity, evidence links, uncertainty, and issue markers.",
+          "Manifest the model from the ground up, starting from plan-level spatial organization.",
+          "Support partial truth instead of hiding schematic or incomplete geometry."
+        ],
+        outputs: [
+          "browser-facing scene graph",
+          "interpretive geometry",
+          "uncertainty display",
+          "evidence references",
+          "issue markers"
+        ],
+        rule: "The scene graph is interpretive and should represent schematic truth when full precision is not available.",
+        why: "Creates the first browser-facing representation of the model.",
+        resources: [
+          { file: "Scene Graph Contract for Browser Review.md", use: "scene-graph structure, evidence links, review states" },
+          { file: "Structural Graph Builder Research.md", use: "map neutral-model objects and relations into graph nodes and edges" },
+          { file: "Structural Plan Interpretation Research.md", use: "plan-grounded placement logic" },
+          { file: "Structural Elevation Resolution Research.md", use: "vertical and roof logic in the scene" },
+          { file: "Uncertainty and Conflict Pipeline Model.md", use: "show partial truth and low-confidence areas" }
+        ]
+      },
+      {
+        id: "stage-8a",
+        nav: "Stage 8A",
+        number: "8A",
+        title: "Detailed Three.js Review Model",
+        short: "Deepen the scene graph into a richer review surface.",
+        goal: "Build a richer browser model once object identity and core geometry are understood well enough.",
+        purpose: [
+          "Upgrade simple lines and surfaces into richer low-cost review geometry.",
+          "Keep inferred geometry visibly flagged and missing recognition visible.",
+          "Improve inspectability before any export workflow is attempted."
+        ],
+        outputs: [
+          "richer review geometry",
+          "clearer geometry maturity display",
+          "better unresolved issue visibility"
+        ],
+        rule: "Still a review model, not a BIM authoring model.",
+        why: "Improves browser review without replacing the neutral model.",
+        resources: [
+          { file: "AI Structural Model Review Pipeline.md", use: "Three.js review model responsibilities and rendering strategy" },
+          { file: "Scene Graph Contract for Browser Review.md", use: "semantic data shape the richer model consumes" },
+          { file: "Pipeline Object Identity and Naming.md", use: "stable selections, overrides, and review references" },
+          { file: "Uncertainty and Conflict Pipeline Model.md", use: "heatmaps, ghosted geometry, unresolved display" },
+          { file: "Geometry Solver Research for Structural Drawings.md", use: "geometry improvement once identity and topology are stable" }
+        ]
+      },
+      {
+        id: "stage-9",
+        nav: "Stage 9",
+        number: "9",
+        title: "Human Feedback During Interpretation",
+        short: "Let a human steer understanding while the model is still being built.",
+        goal: "Allow a human to influence the understanding process before the final model is locked in.",
+        purpose: [
+          "Allow page-role confirmation or correction.",
+          "Surface missing critical sheets or early wrong assumptions.",
+          "Focus the orchestrator on project-specific priorities before the model hardens."
+        ],
+        outputs: [
+          "steering feedback",
+          "task reprioritization",
+          "corrected early assumptions"
+        ],
+        rule: "This review point steers understanding while interpretation is still active.",
+        why: "Lets humans steer interpretation before final review.",
+        resources: [
+          { file: "Human Review Protocol for AI Extraction.md", use: "structured interventions and targeted reruns" },
+          { file: "LLM Pipeline Run Management Design.md", use: "auditable interrupt and resume behavior" },
+          { file: "AI Drawing Interpretation Pipeline Architecture.md", use: "invalidate only the affected slice" },
+          { file: "Uncertainty and Conflict Pipeline Model.md", use: "identify where human steering matters most" }
+        ]
+      },
+      {
+        id: "stage-10",
+        nav: "Stage 10",
+        number: "10",
+        title: "Human Review Of The Scene Graph",
+        short: "Run final structured review in the browser.",
+        goal: "Allow final inspection and correction of the interpreted model inside the browser review environment.",
+        purpose: [
+          "Inspect objects in 3D and inspect supporting evidence.",
+          "Approve, reject, or correct AI interpretations, geometry, topology, and object type.",
+          "Translate feedback into structured review actions wherever possible."
+        ],
+        outputs: [
+          "approvals and rejections",
+          "overrides",
+          "issues",
+          "readiness decisions for downstream use"
+        ],
+        rule: "Final trust boundary before later export-oriented workflows.",
+        why: "Produces the reviewed model used downstream.",
+        resources: [
+          { file: "Human Review Protocol for AI Extraction.md", use: "approve, reject, edit, reread, and targeted invalidation rules" },
+          { file: "AI Structural Model Review Pipeline.md", use: "browser review workflow responsibilities" },
+          { file: "Scene Graph Contract for Browser Review.md", use: "what the reviewer needs to inspect" },
+          { file: "Pipeline Object Identity and Naming.md", use: "keep overrides stable across reruns and export" },
+          { file: "engineering-drawing-vision.md", use: "guardrail against accepting unsupported critical values" }
+        ]
+      },
+      {
+        id: "stage-11",
+        nav: "Stage 11",
+        number: "11",
+        title: "Downstream Export Later",
+        short: "Use the reviewed neutral model for later export workflows.",
+        goal: "Use the reviewed neutral model as the basis for export-oriented workflows such as BIM or Revit family placement.",
+        purpose: [
+          "Carry forward a model that already knows what the objects are, where they are, and how they connect.",
+          "Treat export as downstream of review rather than as the first internal target.",
+          "Preserve the separation between interpretation, review, and later authoring."
+        ],
+        outputs: [
+          "later export-ready foundation",
+          "reviewed neutral model handoff"
+        ],
+        rule: "Revit or BIM generation should not be the first internal model.",
+        why: "Keeps export downstream of interpretation and review.",
+        resources: [
+          { file: "Pipeline Object Identity and Naming.md", use: "stable IDs and names for export consistency" },
+          { file: "Structural Graph Builder Research.md", use: "export should flow from the stable neutral model" },
+          { file: "Scene Graph Contract for Browser Review.md", use: "browser output as bridge, not source of truth" },
+          { file: "Geometry Solver Research for Structural Drawings.md", use: "more deterministic geometry once export readiness increases" }
+        ]
+      }
+    ];
+
+    const stageList = document.getElementById("stageList");
+    const stageNav = document.getElementById("stageNav");
+    const stageSearch = document.getElementById("stageSearch");
+    const expandAllBtn = document.getElementById("expandAllBtn");
+    const collapseAllBtn = document.getElementById("collapseAllBtn");
+    const modal = document.getElementById("stageModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalBody = document.getElementById("modalBody");
+    const modalTags = document.getElementById("modalTags");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+
+    const renderNav = () => {
+      stageNav.innerHTML = stages.map(stage => (
+        `<a class="nav-link" href="#${stage.id}">${stage.number} · ${stage.title}</a>`
+      )).join("");
+    };
+
+    const renderStages = () => {
+      stageList.innerHTML = stages.map(stage => `
+        <article class="stage-card" id="${stage.id}" data-search="${[stage.number, stage.title, stage.short, stage.goal, stage.purpose.join(' '), stage.outputs.join(' '), stage.rule, stage.why, (stage.resources || []).map(item => item.file + ' ' + item.use).join(' ')].join(' ').toLowerCase()}">
+          <details class="stage-details">
+            <summary>
+              <div class="stage-summary">
+                <div class="stage-number">${stage.number}</div>
+                <div>
+                  <div class="stage-title-row">
+                    <h3>${stage.title}</h3>
+                    <span class="pill">Workflow stage</span>
+                  </div>
+                  <p>${stage.short}</p>
+                </div>
+                <div class="stage-arrow">⌄</div>
+              </div>
+            </summary>
+            <div class="stage-body">
+              <div class="stage-tags">
+                <span class="tag">Goal</span>
+                <span class="tag">Purpose</span>
+                <span class="tag">Outputs</span>
+                <span class="tag">Rule</span>
+              </div>
+              <div class="stage-columns">
+                <div class="stage-panel">
+                  <h4>Goal</h4>
+                  <p style="margin-bottom: 12px;">${stage.goal}</p>
+                  <ul class="list">${stage.purpose.map(item => `<li>${item}</li>`).join("")}</ul>
+                </div>
+                <div class="stage-panel">
+                  <h4>Main outputs</h4>
+                  <ul class="list">${stage.outputs.map(item => `<li>${item}</li>`).join("")}</ul>
+                </div>
+              </div>
+              <div class="stage-panel">
+                <h4>Relevant md files</h4>
+                <ul class="resource-list">${(stage.resources || []).map(item => `<li class="resource-item"><span class="resource-file">${item.file}</span><span>${item.use}</span></li>`).join("")}</ul>
+              </div>
+              <div class="stage-footer">
+                <p><strong>Important rule:</strong> ${stage.rule}</p>
+                <button class="link-btn" type="button" data-stage-id="${stage.id}">More details</button>
+              </div>
+            </div>
+          </details>
+        </article>
+      `).join("");
+    };
+
+    const openModal = stageId => {
+      const stage = stages.find(item => item.id === stageId);
+      if (!stage) return;
+
+      modalTitle.textContent = `${stage.number} · ${stage.title}`;
+      modalTags.innerHTML = `
+        <span class="tag">Stage ${stage.number}</span>
+        <span class="tag">MainPlan3</span>
+        <span class="tag">Meeting detail view</span>
+      `;
+      modalBody.innerHTML = `
+        <div class="modal-grid">
+          <section class="modal-block">
+            <h4>Goal</h4>
+            <p>${stage.goal}</p>
+          </section>
+          <section class="modal-block">
+            <h4>Execution note</h4>
+            <p>${stage.why}</p>
+          </section>
+          <section class="modal-block full">
+            <h4>Purpose</h4>
+            <ul>${stage.purpose.map(item => `<li>${item}</li>`).join("")}</ul>
+          </section>
+          <section class="modal-block">
+            <h4>Main outputs</h4>
+            <ul>${stage.outputs.map(item => `<li>${item}</li>`).join("")}</ul>
+          </section>
+          <section class="modal-block full">
+            <h4>Relevant md files</h4>
+            <ul class="resource-list">${(stage.resources || []).map(item => `<li class="resource-item"><span class="resource-file">${item.file}</span><span>${item.use}</span></li>`).join("")}</ul>
+          </section>
+          <section class="modal-block">
+            <h4>Important rule</h4>
+            <p>${stage.rule}</p>
+          </section>
+          <section class="modal-block full">
+            <h4>Short version</h4>
+            <p>${stage.short} ${stage.why}</p>
+          </section>
+        </div>
+      `;
+
+      modal.classList.add("active");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    };
+
+    const closeModal = () => {
+      modal.classList.remove("active");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    };
+
+    const filterStages = value => {
+      const query = value.trim().toLowerCase();
+      const cards = Array.from(document.querySelectorAll(".stage-card"));
+      cards.forEach(card => {
+        const haystack = card.dataset.search || "";
+        card.hidden = query && !haystack.includes(query);
+      });
+    };
+
+    renderNav();
+    renderStages();
+
+    stageSearch.addEventListener("input", event => filterStages(event.target.value));
+
+    expandAllBtn.addEventListener("click", () => {
+      document.querySelectorAll(".stage-details").forEach(item => { item.open = true; });
+      document.getElementById("stages").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    collapseAllBtn.addEventListener("click", () => {
+      document.querySelectorAll(".stage-details").forEach(item => { item.open = false; });
+      document.getElementById("stages").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    stageList.addEventListener("click", event => {
+      const button = event.target.closest("[data-stage-id]");
+      if (button) {
+        openModal(button.dataset.stageId);
+      }
+    });
+
+    closeModalBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", event => {
+      if (event.target === modal) closeModal();
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && modal.classList.contains("active")) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "engineering-drawing-extraction.schema.json",
+  "title": "Engineering Drawing Extraction",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "document_id",
+    "sheet",
+    "source_image_ids",
+    "drawing_regions",
+    "extracted_items",
+    "cross_references",
+    "assumptions",
+    "unresolved_items",
+    "overall_confidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "document_id": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "preset": {
+      "type": "string"
+    },
+    "sheet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "page_number"
+      ],
+      "properties": {
+        "page_number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sheet_number": {
+          "type": "string"
+        },
+        "sheet_title": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "scale_text": {
+          "type": "string"
+        },
+        "discipline": {
+          "type": "string"
+        },
+        "drawing_status": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "source_image_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "drawing_regions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "region_id",
+          "region_type",
+          "source_image_ids",
+          "confidence"
+        ],
+        "properties": {
+          "region_id": {
+            "type": "string"
+          },
+          "region_type": {
+            "type": "string",
+            "enum": [
+              "title_block",
+              "revision_table",
+              "plan",
+              "elevation",
+              "section",
+              "detail",
+              "schedule",
+              "legend",
+              "notes",
+              "grid",
+              "dimension_zone",
+              "key_plan",
+              "other"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "source_image_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "bounds_px": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "x0": {
+                "type": "number"
+              },
+              "y0": {
+                "type": "number"
+              },
+              "x1": {
+                "type": "number"
+              },
+              "y1": {
+                "type": "number"
+              }
+            }
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "extracted_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "item_id",
+          "item_type",
+          "value",
+          "source_image_ids",
+          "confidence",
+          "read_type"
+        ],
+        "properties": {
+          "item_id": {
+            "type": "string"
+          },
+          "item_type": {
+            "type": "string",
+            "enum": [
+              "dimension",
+              "grid_label",
+              "level",
+              "member_label",
+              "member_size",
+              "material",
+              "note",
+              "schedule_value",
+              "scale",
+              "callout",
+              "detail_reference",
+              "section_reference",
+              "elevation_reference",
+              "title_block_value",
+              "revision_value",
+              "other"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {},
+          "unit": {
+            "type": "string"
+          },
+          "raw_text": {
+            "type": "string"
+          },
+          "nearby_text": {
+            "type": "string"
+          },
+          "region_id": {
+            "type": "string"
+          },
+          "source_image_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "source_sheet": {
+            "type": "string"
+          },
+          "source_page_number": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "read_type": {
+            "type": "string",
+            "enum": [
+              "directly_read",
+              "inferred",
+              "assumed",
+              "computed"
+            ]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "uncertainty_note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "cross_references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "from_reference",
+          "reference_type",
+          "source_image_ids",
+          "confidence"
+        ],
+        "properties": {
+          "from_reference": {
+            "type": "string"
+          },
+          "to_sheet": {
+            "type": "string"
+          },
+          "to_detail": {
+            "type": "string"
+          },
+          "reference_type": {
+            "type": "string",
+            "enum": [
+              "section",
+              "elevation",
+              "detail",
+              "schedule",
+              "note",
+              "grid",
+              "other"
+            ]
+          },
+          "source_image_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "assumption",
+          "reason",
+          "confidence"
+        ],
+        "properties": {
+          "assumption": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "source_image_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    },
+    "unresolved_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "description",
+          "severity",
+          "recommended_next_step"
+        ],
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ]
+          },
+          "source_image_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "recommended_next_step": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "overall_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage6/neutral-object.schema.json",
+  "title": "NeutralObject",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "neutral_object_id",
+    "run_id",
+    "object_family",
+    "spatial_anchor",
+    "geometry_maturity",
+    "evidence_refs",
+    "epistemic_status",
+    "lineage"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage6/neutral-object" },
+    "schema_version": { "const": "v1" },
+    "neutral_object_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "object_family": { "type": "string", "minLength": 1 },
+    "display_label": { "type": "string" },
+    "spatial_anchor": { "$ref": "../common/base-types.schema.json#/$defs/SpatialAnchor" },
+    "level_ref": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "geometry_maturity": { "$ref": "../common/base-types.schema.json#/$defs/GeometryMaturity" },
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dimension_type", "value", "unit", "epistemic_status"],
+        "properties": {
+          "dimension_type": { "type": "string" },
+          "value": { "type": "number" },
+          "unit": { "type": "string" },
+          "epistemic_status": { "$ref": "../common/base-types.schema.json#/$defs/EpistemicStatus" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "topology_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/evidence-ref.schema.json" },
+      "minItems": 1
+    },
+    "epistemic_status": { "$ref": "../common/base-types.schema.json#/$defs/EpistemicStatus" },
+    "conflict_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "unresolved_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "review_status": {
+      "type": "string",
+      "enum": ["unreviewed", "machine_verified", "machine_warning", "human_approved", "human_corrected"]
+    },
+    "lineage": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/LineageRef" },
+      "minItems": 1
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

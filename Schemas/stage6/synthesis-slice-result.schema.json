@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage6/synthesis-slice-result.schema.json",
+  "title": "SynthesisSliceResult",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "slice_id",
+    "run_id",
+    "synthesis_cycle_id",
+    "slice_type",
+    "scope_definition",
+    "input_package_artifacts_used",
+    "objects_committed",
+    "relationships_committed",
+    "unresolved_item_ids",
+    "blocked_item_ids",
+    "exit_status"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage6/synthesis-slice-result" },
+    "schema_version": { "const": "v1" },
+    "slice_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "synthesis_cycle_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "slice_type": { "type": "string", "minLength": 1 },
+    "scope_definition": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "input_package_artifacts_used": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "objects_committed": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "relationships_committed": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "unresolved_item_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "blocked_item_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "backward_route_recommendation": {
+      "type": "string",
+      "enum": ["reroute-stage2", "reroute-stage3", "reroute-stage4"]
+    },
+    "exit_status": {
+      "type": "string",
+      "enum": ["committed", "partial", "blocked", "reroute-stage2", "reroute-stage3", "reroute-stage4"]
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

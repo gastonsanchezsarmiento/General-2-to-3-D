@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage0/run-manifest.schema.json",
+  "title": "RunManifest",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "run_id",
+    "project_id",
+    "created_at",
+    "source_document_ids",
+    "stage_status"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage0/run-manifest" },
+    "schema_version": { "const": "v1" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "project_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "created_at": { "$ref": "../common/base-types.schema.json#/$defs/Timestamp" },
+    "source_document_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+      "minItems": 1
+    },
+    "stage_status": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "artifact_roots": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "config_snapshot": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

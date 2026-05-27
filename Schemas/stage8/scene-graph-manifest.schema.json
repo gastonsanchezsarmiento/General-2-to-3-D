@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage8/scene-graph-manifest.schema.json",
+  "title": "SceneGraphManifest",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "scene_graph_id",
+    "run_id",
+    "scene_generation_cycle_id",
+    "source_stage6_model_id",
+    "source_stage7_verification_run_id",
+    "included_stage6_slice_ids",
+    "included_stage7_slice_result_ids",
+    "overall_scene_status",
+    "scope_policy",
+    "coordinate_contract",
+    "node_registry_ref",
+    "edge_registry_ref",
+    "geometry_registry_ref",
+    "layer_registry_ref",
+    "filter_index_ref",
+    "issue_registry_ref",
+    "evidence_link_registry_ref",
+    "viewpoint_seed_registry_ref",
+    "scene_slice_result_refs"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage8/scene-graph-manifest" },
+    "schema_version": { "const": "v1" },
+    "scene_graph_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "scene_generation_cycle_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "source_stage6_model_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "source_stage7_verification_run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "included_stage6_slice_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "included_stage7_slice_result_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "scene_graph_version": { "$ref": "../common/base-types.schema.json#/$defs/SchemaVersion" },
+    "overall_scene_status": {
+      "type": "string",
+      "enum": ["emitted", "emitted-with-provisional", "partial", "blocked", "stale"]
+    },
+    "scope_policy": {
+      "type": "string",
+      "enum": ["verified-only", "verified-plus-provisional", "blocked-as-issue-only"]
+    },
+    "coordinate_contract": {
+      "type": "object",
+      "required": ["units", "handedness", "up_axis", "local_origin_strategy"],
+      "properties": {
+        "units": { "type": "string", "minLength": 1 },
+        "handedness": { "type": "string", "enum": ["right-handed", "left-handed"] },
+        "up_axis": { "type": "string", "enum": ["x", "y", "z"] },
+        "local_origin_strategy": { "type": "string", "minLength": 1 },
+        "scene_origin_ref": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "node_registry_ref": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" },
+    "edge_registry_ref": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" },
+    "geometry_registry_ref": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" },
+    "layer_registry_ref": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" },
+    "filter_index_ref": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" },
+    "issue_registry_ref": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" },
+    "evidence_link_registry_ref": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" },
+    "viewpoint_seed_registry_ref": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" },
+    "scene_slice_result_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

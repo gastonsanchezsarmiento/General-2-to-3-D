@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage6/neutral-model-manifest.schema.json",
+  "title": "NeutralModelManifest",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "model_id",
+    "run_id",
+    "synthesis_cycle_id",
+    "accepted_stage5a_package_id",
+    "overall_synthesis_status",
+    "object_artifact_refs",
+    "relationship_artifact_refs",
+    "anchor_registry_ref",
+    "geometry_maturity_registry_ref",
+    "topology_graph_ref",
+    "verification_readiness_ref"
+  ],
+  "properties": {
+    "schema_id": { "const": "stage6/neutral-model-manifest" },
+    "schema_version": { "const": "v1" },
+    "model_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "synthesis_cycle_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "accepted_stage5a_package_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "active_project_profile_modules": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "model_version": { "$ref": "../common/base-types.schema.json#/$defs/SchemaVersion" },
+    "overall_synthesis_status": {
+      "type": "string",
+      "enum": ["ready-for-verification", "partial", "blocked", "stale"]
+    },
+    "object_artifact_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "relationship_artifact_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "anchor_registry_ref": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" },
+    "geometry_maturity_registry_ref": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" },
+    "topology_graph_ref": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" },
+    "unresolved_artifact_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "conflict_artifact_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "slice_result_refs": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" }
+    },
+    "verification_readiness_ref": { "$ref": "../common/base-types.schema.json#/$defs/ArtifactRef" },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://plan-to-3d.local/schemas/stage2/read-plan.schema.json",
+  "title": "ReadPlan",
+  "type": "object",
+  "required": [
+    "schema_id",
+    "schema_version",
+    "plan_id",
+    "run_id",
+    "working_project_hypothesis",
+    "tasks"
+  ],
+  "$defs": {
+    "ReadTask": {
+      "type": "object",
+      "required": [
+        "task_id",
+        "task_type",
+        "target_page_ids",
+        "prompt_family",
+        "expected_output_schema_id"
+      ],
+      "properties": {
+        "task_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+        "task_type": { "type": "string", "minLength": 1 },
+        "target_page_ids": {
+          "type": "array",
+          "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+          "minItems": 1
+        },
+        "target_region_ids": {
+          "type": "array",
+          "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+        },
+        "prompt_family": { "type": "string", "minLength": 1 },
+        "expected_output_schema_id": { "type": "string", "minLength": 1 },
+        "support_eligible": { "type": "boolean" },
+        "escalation_rule": { "type": "string" },
+        "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "schema_id": { "const": "stage2/read-plan" },
+    "schema_version": { "const": "v1" },
+    "plan_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "run_id": { "$ref": "../common/base-types.schema.json#/$defs/Id" },
+    "working_project_hypothesis": { "type": "string", "minLength": 1 },
+    "collection_goals": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "tasks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ReadTask" },
+      "minItems": 1
+    },
+    "unresolved_ids": {
+      "type": "array",
+      "items": { "$ref": "../common/base-types.schema.json#/$defs/Id" }
+    },
+    "extensions": { "$ref": "../common/base-types.schema.json#/$defs/Extensions" }
+  },
+  "additionalProperties": false
+}
