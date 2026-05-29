@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "plan-to-3d-backend"
+version = "0.1.0"
+description = "Milestone 1 backend for the plan-to-3d review application"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115,<1.0",
+  "openai>=1.109,<2.0",
+  "python-multipart>=0.0.20,<1.0",
+  "PyMuPDF>=1.26,<2.0",
+  "uvicorn[standard]>=0.35,<1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "httpx>=0.28,<1.0",
+  "pytest>=8.4,<9.0",
+]
+
+[project.scripts]
+plan-to-3d-api = "plan_to_3d.main:run"
+
+[tool.setuptools.packages.find]
+where = ["src"]

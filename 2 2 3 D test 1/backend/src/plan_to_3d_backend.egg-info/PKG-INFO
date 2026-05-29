@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: plan-to-3d-backend
+Version: 0.1.0
+Summary: Milestone 1 backend for the plan-to-3d review application
+Requires-Python: >=3.11
+Requires-Dist: fastapi<1.0,>=0.115
+Requires-Dist: openai<2.0,>=1.109
+Requires-Dist: python-multipart<1.0,>=0.0.20
+Requires-Dist: PyMuPDF<2.0,>=1.26
+Requires-Dist: uvicorn[standard]<1.0,>=0.35
+Provides-Extra: dev
+Requires-Dist: httpx<1.0,>=0.28; extra == "dev"
+Requires-Dist: pytest<9.0,>=8.4; extra == "dev"

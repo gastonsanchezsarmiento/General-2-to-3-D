@@ -1,0 +1,9 @@
+fastapi<1.0,>=0.115
+openai<2.0,>=1.109
+python-multipart<1.0,>=0.0.20
+PyMuPDF<2.0,>=1.26
+uvicorn[standard]<1.0,>=0.35
+
+[dev]
+httpx<1.0,>=0.28
+pytest<9.0,>=8.4

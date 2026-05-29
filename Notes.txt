@@ -4,7 +4,7 @@ Critical Milestones
 (should align with implementation phases - not 1 to 1, but broadly speaking)
  
 
---Interpretation
+--Interpretation <---
 1/ Initial Readthrough by GPT-5.5 Responses and it then has good understanding 
 and know broadly what is on each page and what the drawing pack if for. This 
 is shown in a UI.
@@ -33,3 +33,58 @@ ask it to draw it which provides instant verification. ie go straight to 3JS.
 portal frames. We check this for accuracy. Probably ok to assume that the graph 
 was accurate if it does this step ok.
 
+
+--
+Personal notes
+
+-Ahora ajustando el playhooks
+-Elementos y dimensiones
+    -Necesito que se enfoque un poco mas en conseguir dimensiones 
+    -capaz enfocarse mas en conseguir los elementos y toda la informacion posible de esos.
+    -capaz generar una ui dedicada para esto
+-stage 1 tiene que saber de entrada que las imagenes son low res y son para un broad understanding
+capaz hay q ajustar eso con mas especificidad.
+-capaz el low res esta mmuy low res y mejor subirlo un toque
+-comprar pajitas largas para la melen
+
+
+--Sections
+
+Openai_pipeline.py line 233 (which will change for sure): First stage prompt
+class OpenAIStageClient:
+    def __init__(self, settings: Settings) -> None:
+        if not settings.openai_api_key:
+            raise RuntimeError("OPENAI_API_KEY is required when PLAN3D_MODEL_MODE=openai")
+        self.settings = settings
+        self.client = OpenAI(api_key=settings.openai_api_key)
+
+    def stage1_reconnaissance(
+        self,
+        run_id: str,
+        pages: list[PageRecord],
+        playbook_override: str | None = None,
+    ) -> tuple[Stage1Reconnaissance, list[dict[str, Any]]]:
+        journals: list[dict[str, Any]] = []
+        page_results: list[dict[str, Any]] = []
+
+        for page in pages:
+            preview_path = _artifact_path(self.settings.app_root, page.preview_artifact.path if page.preview_artifact else None)
+            if preview_path is None or not preview_path.exists():
+                continue
+
+            payload, journal = self._call_structured(
+--AUX
+
+
+
+--Run CLI Commands
+backend:
+cd "C:\Users\gasto\Desktop\GeyerTechnologies\plan to 3D - 2\2 2 3 D test 1\backend"
+python -m plan_to_3d.main
+
+frontend:
+cd "C:\Users\gasto\Desktop\GeyerTechnologies\plan to 3D - 2\2 2 3 D test 1\frontend"
+npm.cmd run dev
+
+UI:
+http://localhost:5173

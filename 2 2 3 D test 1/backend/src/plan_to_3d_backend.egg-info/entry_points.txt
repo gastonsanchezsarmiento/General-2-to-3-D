@@ -1,0 +1,2 @@
+[console_scripts]
+plan-to-3d-api = plan_to_3d.main:run
